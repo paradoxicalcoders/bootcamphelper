@@ -3,18 +3,6 @@ const axios = require('axios');
 // With your login credentials you can potentially access all the following endpoints with base URL
 // https://bootcampspot.com/api/instructor/v1
 
-// Login (/login) Allows to get an authorization token with a set of credentials.
-// Me (/me) Provides detailed profile and authorization information for the caller.
-// Attendance (/attendance) Lists attendance status of all students in a course, for all sessions.
-// Grades (/grades) Lists homework submission grades of all students in a course, for all assignments.
-// Sessions (/sessions) Lists all sessions.
-// Session Detail (/sessionDetail) Lists details for the specified session.
-// Assignments (/assignments) Lists all assignments.
-// Assignment Detail (/assignmentDetail) Lists details on a specified assignment.
-
-// Update HEADER with auth token
-// authToken <valid token>
-
 const BASE_URL = 'https://bootcampspot.com/api/instructor/v1';
 
 const bcs = axios.create({
@@ -26,7 +14,7 @@ const bcs = axios.create({
 });
 
 module.exports = {
-  // Login (/login)
+  // Login (/login) Allows to get an authorization token with a set of credentials.
   login: async (credentials) => {
     try {
       return bcs.post('/login', credentials);
