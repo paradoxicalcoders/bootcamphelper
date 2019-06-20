@@ -57,9 +57,9 @@ module.exports = {
     }
   },
   // Sessions (/sessions) Lists all sessions.
-  sessions: async (body, { authtoken }) => {
+  sessions: async (id, { authtoken }) => {
     try {
-      return bcs.post('/sessions', body, {
+      return bcs.post('/sessions', { enrollmentId: +id }, {
         headers: { authtoken }
       });
     } catch (error) {
@@ -68,9 +68,9 @@ module.exports = {
     }
   },
   // Session Detail (/sessionDetail) Lists details for the specified session.
-  sessionDetail: async (body, { authtoken }) => {
+  sessionDetail: async (id, { authtoken }) => {
     try {
-      return bcs.post('/sessionDetail', body, {
+      return bcs.post('/sessionDetail', { sessionId: +id }, {
         headers: { authtoken }
       });
     } catch (error) {
