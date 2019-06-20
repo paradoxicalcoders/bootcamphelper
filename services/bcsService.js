@@ -35,15 +35,69 @@ module.exports = {
     }
   },
   // Attendance (/attendance) Lists attendance status of all students in a course, for all sessions.
-  attendance: async () => { },
+  attendance: async (body, { authtoken }) => {
+    try {
+      return bcs.post('/attendance', body, {
+        headers: { authtoken }
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
   // Grades (/grades) Lists homework submission grades of all students in a course, for all assignments.
-  grades: async () => { },
+  grades: async (body, { authtoken }) => {
+    try {
+      return bcs.post('/grades', body, {
+        headers: { authtoken }
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
   // Sessions (/sessions) Lists all sessions.
-  sessions: async () => { },
+  sessions: async (body, { authtoken }) => {
+    try {
+      return bcs.post('/sessions', body, {
+        headers: { authtoken }
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
   // Session Detail (/sessionDetail) Lists details for the specified session.
-  sessionDetail: async () => { },
+  sessionDetail: async (body, { authtoken }) => {
+    try {
+      return bcs.post('/sessionDetail', body, {
+        headers: { authtoken }
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
   // Assignments (/assignments) Lists all assignments.
-  assignments: async () => { },
+  assignments: async (body, { authtoken }) => {
+    try {
+      return bcs.post('/assignments', body, {
+        headers: { authtoken }
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
   // Assignment Detail (/assignmentDetail) Lists details on a specified assignment.
-  assignmentDetail: async () => { },
+  assignmentDetail: async (body, { authtoken }) => {
+    try {
+      return bcs.post('/assignmentDetail', body, {
+        headers: { authtoken }
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
 };
