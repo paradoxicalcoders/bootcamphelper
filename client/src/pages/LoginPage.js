@@ -8,9 +8,7 @@ class LoginPage extends Component {
       <Box
         display="flex"
         justifyContent="center"
-        alignItems="center"
-        height="100%"
-        p={4}
+        pt={8}
       >
         <Card maxwidth={360} width="90%">
           <CardHeader component={LoginPageCardHeader} />
