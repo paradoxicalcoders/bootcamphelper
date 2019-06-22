@@ -1,11 +1,16 @@
 {
   "name": "com.paradoxicalcoders.bootcamphelper-server",
   "version": "1.0.0",
-  "description": "Backend Server for Bootcamp Helper",
+  "description": "KU Bootcamp Helper",
   "main": "server.js",
   "engines": {
     "node": "12.x"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paradoxicalcoders/bootcamphelper.git"
+  },
+  "homepage": "https://kubootcamphelper.herokuapp.com/",
   "scripts": {
     "start": "if-env NODE_ENV=production && yarn run start:prod || yarn run start:dev",
     "start:prod": "node server.js",
@@ -28,6 +33,11 @@
     "delay": "2000",
     "ignore": [
       "client/*"
+    ]
+  },
+  "nyc": {
+    "exclude": [
+      "client"
     ]
   },
   "author": "",
