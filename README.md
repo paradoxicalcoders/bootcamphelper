@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.com/paradoxicalcoders/bootcamphelper.svg?branch=dev)](https://travis-ci.com/paradoxicalcoders/bootcamphelper)
+[![Build Status](https://travis-ci.com/paradoxicalcoders/bootcamphelper.svg?branch=master)](https://travis-ci.com/paradoxicalcoders/bootcamphelper)
