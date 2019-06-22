@@ -10,7 +10,7 @@ const bcs = axios.create({
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 });
 
 module.exports = {
@@ -20,7 +20,6 @@ module.exports = {
       const { data: auth } = await bcs.post('/login', { email, password });
       return auth;
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
@@ -28,10 +27,9 @@ module.exports = {
   me: async (authtoken) => {
     try {
       return bcs.get('/me', {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
@@ -39,21 +37,20 @@ module.exports = {
   attendance: async (body, { authtoken }) => {
     try {
       return bcs.post('/attendance', body, {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
-  // Grades (/grades) Lists homework submission grades of all students in a course, for all assignments.
+  // Grades (/grades)
+  // Lists homework submission grades of all students in a course, for all assignments.
   grades: async (body, { authtoken }) => {
     try {
       return bcs.post('/grades', body, {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
@@ -61,10 +58,9 @@ module.exports = {
   sessions: async (id, { authtoken }) => {
     try {
       return bcs.post('/sessions', { enrollmentId: +id }, {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
@@ -72,10 +68,9 @@ module.exports = {
   sessionDetail: async (id, { authtoken }) => {
     try {
       return bcs.post('/sessionDetail', { sessionId: +id }, {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
@@ -83,10 +78,9 @@ module.exports = {
   assignments: async (body, { authtoken }) => {
     try {
       return bcs.post('/assignments', body, {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
@@ -94,10 +88,9 @@ module.exports = {
   assignmentDetail: async (body, { authtoken }) => {
     try {
       return bcs.post('/assignmentDetail', body, {
-        headers: { authtoken }
+        headers: { authtoken },
       });
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },

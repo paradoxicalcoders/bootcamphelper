@@ -5,6 +5,7 @@ const session = require('express-session');
 const passport = require('./config/passport');
 
 const routes = require('./routes');
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -16,16 +17,16 @@ app.use(session({ secret: 'bootcamp helper', resave: true, saveUninitialized: tr
 app.use(passport.initialize());
 app.use(passport.session());
 
-var whitelist = ['http://localhost:3000', 'http://kubootcamphelper.heroku.com']
-var corsOptions = {
+const whitelist = ['http://localhost:3000', 'http://kubootcamphelper.heroku.com'];
+const corsOptions = {
   origin: (origin, callback) => {
-    console.log('origin', origin);
+    // console.log('origin', origin);
     if (whitelist.includes(origin) || !origin) {
-      return callback(null, true)
+      return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));
-  }
-}
+  },
+};
 app.use(cors(corsOptions));
 
 // Serve up static assets (usually on heroku)
@@ -37,5 +38,6 @@ if (process.env.NODE_ENV === 'production') {
 app.use(routes);
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line
   console.log(`🌎 ==> API server now on port ${PORT}!`);
 });

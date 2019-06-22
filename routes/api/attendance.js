@@ -1,5 +1,5 @@
-const router = require("express").Router();
-const attendanceController = require("../../controllers/attendanceController.js");
+const router = require('express').Router();
+const attendanceController = require('../../controllers/attendanceController.js');
 
 // Matches with "/api/auth/login"
 router.route('/list')

@@ -6,7 +6,6 @@ module.exports = {
       const response = await bcs.sessions(req.params.id, req.headers);
       res.json(response.data);
     } catch (error) {
-      console.error(error);
       res.status(500).send(error);
     }
   },
@@ -15,7 +14,6 @@ module.exports = {
       const response = await bcs.sessionDetail(req.params.id, req.headers);
       res.json(response.data);
     } catch (error) {
-      console.error(error);
       res.status(500).send(error);
     }
   },

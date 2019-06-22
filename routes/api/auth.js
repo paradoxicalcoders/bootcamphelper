@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const passport = require('../../config/passport')
+const passport = require('../../config/passport');
 const authController = require('../../controllers/authController');
 
 router.use(passport.authenticate('local'));
