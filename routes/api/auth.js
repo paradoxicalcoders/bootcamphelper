@@ -1,11 +1,11 @@
-const router = require("express").Router();
-const authController = require("../../controllers/authController");
+const router = require('express').Router();
+const passport = require('../../config/passport')
+const authController = require('../../controllers/authController');
 
-// Matches with "/api/auth/login"
+router.use(passport.authenticate('local'));
+
+// Matches with '/api/auth/login'
 router.route('/login')
   .post(authController.login);
-
-router.route('/me')
-  .get(authController.me);
 
 module.exports = router;

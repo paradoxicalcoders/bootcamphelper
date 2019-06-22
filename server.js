@@ -1,6 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('./config/passport');
+
 const routes = require('./routes');
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -9,12 +12,15 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(helmet());
+app.use(session({ secret: 'bootcamp helper', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 var whitelist = ['http://localhost:3000', 'http://kubootcamphelper.heroku.com']
 var corsOptions = {
-  origin: function (origin, callback) {
-    console.log(origin);
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
+  origin: (origin, callback) => {
+    console.log('origin', origin);
+    if (whitelist.includes(origin) || !origin) {
       return callback(null, true)
     }
     return callback(new Error('Not allowed by CORS'));

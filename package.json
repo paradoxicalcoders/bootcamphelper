@@ -10,14 +10,15 @@
     "client": "cd client && npm run start",
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "kill": "npx kill-port 3001"
   },
   "nodemonConfig": {
     "events": {
-      "restart": "kill-port 3001",
-      "crash": "kill-port 3001"
+      "restart": "yarn kill",
+      "crash": "yarn kill"
     },
-    "delay": "1500",
+    "delay": "2000",
     "ignore": [
       "client/*"
     ]
@@ -27,15 +28,22 @@
   "devDependencies": {
     "concurrently": "^4.1.0",
     "kill-port": "^1.5.1",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "sequelize-cli": "^5.5.0"
   },
   "dependencies": {
     "@papijs/papi": "^0.3.1",
     "axios": "^0.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "helmet": "^3.18.0",
     "if-env": "^1.0.4",
-    "mongoose": "^5.6.0"
+    "mongoose": "^5.6.0",
+    "mysql2": "^1.6.5",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-session": "^1.0.2",
+    "sequelize": "^5.8.11"
   }
 }
