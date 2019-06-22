@@ -1,1 +1,2 @@
 [![Build Status](https://travis-ci.com/paradoxicalcoders/bootcamphelper.svg?branch=master)](https://travis-ci.com/paradoxicalcoders/bootcamphelper)
+[![Coverage Status](https://coveralls.io/repos/github/paradoxicalcoders/bootcamphelper/badge.svg?branch=master)](https://coveralls.io/github/paradoxicalcoders/bootcamphelper?branch=master)
