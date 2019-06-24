@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Box, Button, Card, CardContent, CardHeader, TextField } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
+import './../index.css';
+import { Box, Button, Card, CardContent, CardHeader, CircularProgress, TextField } from '@material-ui/core';
 import LoginPageCardHeader from './../components/LoginPageCardHeader.js';
 import axios from 'axios';
 
@@ -9,14 +11,29 @@ class LoginPage extends Component {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      authenticated: false,
+      isLoading: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
+    const enrollments = JSON.parse(window.sessionStorage.getItem('enrollments'));
+    const authenticated = userAccount && enrollments ? true : false;
+    this.setState({
+      authenticated,
+    });
+  }
+
   render() {
+    if (this.state.authenticated) {
+      return <Redirect to='/dashboard' />;
+    }
+
     return (
       <Box
         display="flex"
@@ -58,8 +75,9 @@ class LoginPage extends Component {
                   fullWidth
                   variant="contained"
                   color="primary"
+                  disabled={this.state.isLoading}
                 >
-                  Sign In
+                  { this.renderLoginButtonText() }
                 </Button>
               </Box>
             </form>
@@ -69,13 +87,28 @@ class LoginPage extends Component {
     );
   }
 
+  renderLoginButtonText() {
+    if (this.state.isLoading) {
+      return (
+        <CircularProgress size={23} />
+      );
+    }
+    return (
+      <span>Sign In</span>
+    );
+    
+  }
+
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
   }
 
   async handleSubmit(event) {
     event.preventDefault();
-    console.log('Let\'s login baby!');
+
+    this.setState({
+      isLoading: true,
+    });
 
     try {
       const response = await axios.post('http://localhost:3001/api/v1/auth/login', {
@@ -83,8 +116,20 @@ class LoginPage extends Component {
         password: this.state.password,
       });
       console.log(response);
+      if (response.data && response.data.userAccount) {
+        const { userAccount, enrollments } = response.data
+        window.sessionStorage.setItem('userAccount', JSON.stringify(userAccount));
+        window.sessionStorage.setItem('enrollments', JSON.stringify(enrollments));
+        this.setState({
+          authenticated: true,
+          isLoading: false,
+        });
+      }
     } catch (err) {
       console.log(err);
+      this.setState({
+        isLoading: false,
+      });
     }
   }
 }

@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
 import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
 
 const router = (
   <Router>
     <div>
-      <Route path="/" component={LoginPage} />
+      <Route exact path="/" component={LoginPage} />
+      <Route exact path="/dashboard" component={Dashboard} />
     </div>
   </Router>
 )
