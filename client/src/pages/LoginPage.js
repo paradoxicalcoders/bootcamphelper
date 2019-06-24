@@ -52,14 +52,16 @@ class LoginPage extends Component {
                 autoComplete="new-password"
                 value={this.state.password} onChange={this.handleChange}
               />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Sign In
-              </Button>
+              <Box mt={1}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
+                  Sign In
+                </Button>
+              </Box>
             </form>
           </CardContent>
         </Card>
