@@ -17,7 +17,7 @@ app.use(session({ secret: 'bootcamp helper', resave: true, saveUninitialized: tr
 app.use(passport.initialize());
 app.use(passport.session());
 
-const whitelist = ['http://localhost:3000', 'http://localhost:3001', 'http://kubootcamphelper.heroku.com'];
+const whitelist = ['http://localhost:3001', 'http://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
