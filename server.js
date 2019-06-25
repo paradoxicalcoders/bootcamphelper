@@ -17,10 +17,11 @@ app.use(session({ secret: 'bootcamp helper', resave: true, saveUninitialized: tr
 app.use(passport.initialize());
 app.use(passport.session());
 
-const whitelist = ['http://localhost:3001', 'http://kubootcamphelper.herokuapp.com'];
+const WHITE_LIST = ['http://localhost:3001', 'http://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
-    if (whitelist.includes(origin) || !origin) {
+    console.log(origin);
+    if (WHITE_LIST.includes(origin) || !origin) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));
