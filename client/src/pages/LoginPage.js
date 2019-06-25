@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import './../index.css';
+import 'index.css';
 import { Box, Button, Card, CardContent, CardHeader, CircularProgress, TextField } from '@material-ui/core';
-import LoginPageCardHeader from './../components/LoginPageCardHeader.js';
+import LoginPageCardHeader from 'components/LoginPageCardHeader.js';
 import axios from 'axios';
 
 class LoginPage extends Component {
