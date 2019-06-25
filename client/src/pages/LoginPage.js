@@ -77,7 +77,7 @@ class LoginPage extends Component {
                   color="primary"
                   disabled={this.state.isLoading}
                 >
-                  { this.renderLoginButtonText() }
+                  {this.renderLoginButtonText()}
                 </Button>
               </Box>
             </form>
@@ -96,11 +96,11 @@ class LoginPage extends Component {
     return (
       <span>Sign In</span>
     );
-    
+
   }
 
   handleChange(event) {
-    this.setState({[event.target.name]: event.target.value});
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   async handleSubmit(event) {
@@ -111,7 +111,7 @@ class LoginPage extends Component {
     });
 
     try {
-      const response = await axios.post('http://localhost:3001/api/v1/auth/login', {
+      const response = await axios.post('/api/v1/auth/login', {
         email: this.state.email,
         password: this.state.password,
       });
