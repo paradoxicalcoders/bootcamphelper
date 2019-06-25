@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
+import Enrollments from 'components/Enrollments'
 
 class Dashboard extends Component {
 
@@ -36,12 +37,12 @@ class Dashboard extends Component {
 
     return (
       <Box>
-        <AppBar position="static" color="default">
+        <AppBar position="fixed" color="default">
           <Toolbar>
-            <Typography variant="h6" color="inherit" style={{flexGrow: 1}}>
-              Dashboard
+            <Typography variant="h6" color="inherit" style={{ flexGrow: 1 }}>
+              Helper
             </Typography>
-            { this.renderGravatar() }
+            {this.renderGravatar()}
             <Button
               color="inherit"
               onClick={this.onSignOut}
@@ -50,6 +51,7 @@ class Dashboard extends Component {
             </Button>
           </Toolbar>
         </AppBar>
+        <Enrollments enrollments={this.state.enrollments} />
       </Box>
     );
   }
