@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Bootcamp Helper",
   "private": true,
-  "proxy": "http://localhost:3001/",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@material-ui/core": "^4.1.1",
     "@material-ui/icons": "^4.2.0",
@@ -12,7 +12,7 @@
     "react-gravatar": "^2.6.3",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.0-next.68"
   },
   "scripts": {
     "start": "react-scripts start",
