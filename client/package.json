@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Bootcamp Helper",
   "private": true,
-  "proxy": "http://localhost:3001/",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@material-ui/core": "^4.1.1",
     "@material-ui/icons": "^4.2.0",
