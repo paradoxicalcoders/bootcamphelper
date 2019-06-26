@@ -21,8 +21,11 @@ passport.use(new LocalStrategy(
         message: auth.errorCode,
       });
     }
+
+    const { authToken } = auth.authenticationInfo;
     // Successfully BCS login, return user details
-    const { data: user } = await bcs.me(auth.authenticationInfo.authToken);
+    const { data: user } = await bcs.me(authToken);
+    user.userAccount.authToken = authToken;
     return done(null, user);
   },
 ));
