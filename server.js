@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('./config/passport');
+const socketManager = require('./services/socketManager');
 
 const routes = require('./routes');
 
@@ -17,7 +18,7 @@ app.use(session({ secret: 'bootcamp helper', resave: true, saveUninitialized: tr
 app.use(passport.initialize());
 app.use(passport.session());
 
-const WHITE_LIST = ['http://localhost:3001', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
+const WHITE_LIST = ['http://localhost:3000', 'http://localhost:3000/', 'http://localhost:3001', 'http://localhost:3001/', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
     console.log(origin);
@@ -37,7 +38,11 @@ if (process.env.NODE_ENV === 'production') {
 // Add routes, both API and view
 app.use(routes);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   // eslint-disable-next-line
   console.log(`🌎 ==> API server now on port ${PORT}!`);
 });
+
+const io = require('socket.io').listen(server);
+
+io.on('connection', socketManager);

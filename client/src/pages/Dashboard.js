@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import io from 'socket.io-client';
 import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
 import Enrollments from 'components/Enrollments'
@@ -12,9 +13,20 @@ class Dashboard extends Component {
       authenticated: true,
       userAccount: {},
       enrollments: [],
+      socketUrl: null,
+      socket: null,
     };
 
     this.onSignOut = this.onSignOut.bind(this);
+  }
+  
+  componentWillMount() {
+    if (process.env.NODE_ENV === 'production') {
+      this.setState({socketUrl: "http://kubootcamphelper.herokuapp.com"})
+    } else {
+      this.setState({socketUrl: "http://localhost:3001"})
+    }
+    this.initSocket()
   }
 
   componentDidMount() {
@@ -24,8 +36,20 @@ class Dashboard extends Component {
     this.setState({
       userAccount,
       enrollments,
-      authenticated,
+      authenticated
     });
+    this.emitUser(userAccount);
+  }
+
+  initSocket = () => {
+    const socketUrl = 'http://localhost:3001/'
+    const socket = io(socketUrl)
+    this.setState({socket})
+  }
+  
+  emitUser = (userAccount) => {
+    const { socket } = this.state
+    socket.emit('USER_CONNECTED', userAccount)
   }
 
   render() {
