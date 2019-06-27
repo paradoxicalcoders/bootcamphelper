@@ -6,6 +6,7 @@ const socketIo = require('socket.io');
 const passport = require('./config/passport');
 const socketManager = require('./services/socketManager');
 
+const db = require('./models');
 const routes = require('./routes');
 
 const PORT = process.env.PORT || 3001;
@@ -19,7 +20,7 @@ app.use(session({ secret: 'bootcamp helper', resave: true, saveUninitialized: tr
 app.use(passport.initialize());
 app.use(passport.session());
 
-const WHITE_LIST = ['http://localhost:3000', 'http://localhost:3000/', 'http://localhost:3001', 'http://localhost:3001/', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
+const WHITE_LIST = ['http://localhost:3001', 'http://localhost:3001/', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
     console.log(origin);
@@ -45,5 +46,22 @@ const server = app.listen(PORT, () => {
 });
 
 const io = socketIo(server);
-
 io.on('connection', socketManager);
+
+let FORCE_SCHEMA = false;
+if (process.env.NODE_ENV !== 'production') {
+  FORCE_SCHEMA = true;
+}
+
+db.sequelize.authenticate()
+  .then(() => {
+    db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
+      app.listen(PORT, () => {
+        // eslint-disable-next-line
+        console.log(`🌎 ==> API server now on port ${PORT}!`);
+      });
+    });
+  })
+  .catch(err => console.error(err));
+
+module.exports = app;
