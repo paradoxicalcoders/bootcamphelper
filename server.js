@@ -20,7 +20,7 @@ app.use(passport.session());
 const WHITE_LIST = ['http://localhost:3001', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
-    console.log(origin);
+    console.log('Origin: ', origin); // eslint-disable-line no-console
     if (WHITE_LIST.includes(origin) || !origin) {
       return callback(null, true);
     }
@@ -51,6 +51,6 @@ db.sequelize.authenticate()
       });
     });
   })
-  .catch(err => console.error(err));
+  .catch(console.error); // eslint-disable-line no-console
 
 module.exports = app;
