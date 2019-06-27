@@ -4,7 +4,7 @@ const cors = require('cors');
 const session = require('express-session');
 const socketIo = require('socket.io');
 const passport = require('./config/passport');
-const socketManager = require('./services/socketManager');
+const socketManager = require('./services/socketManager').socketManager;
 
 const db = require('./models');
 const routes = require('./routes');
