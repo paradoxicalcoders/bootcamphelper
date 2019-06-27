@@ -97,5 +97,4 @@ const associateEnrollments = async (req) => {
   }
 };
 
-
 exports.login = [formatUser, updateUser, compareEnrollments, updateEnrollments, associateEnrollments];
