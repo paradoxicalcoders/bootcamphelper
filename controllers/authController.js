@@ -15,7 +15,7 @@ const formatUser = async (req, res, next) => {
     githubUsername: account.githubUserName,
     isAdmin: isAdmin(enrollments),
     authToken: account.authToken,
-    Enrollments: enrollments.map(e => ({
+    enrollments: enrollments.map(e => ({
       id: e.id,
       courseId: e.course.id,
       cohortId: e.course.cohortId,
@@ -57,14 +57,14 @@ const compareEnrollments = async (req, res, next) => {
       where: {
         user_id: req.user.id,
         enrollment_id: {
-          [db.Sequelize.Op.in]: req.user.Enrollments.map(e => e.id),
+          [db.Sequelize.Op.in]: req.user.enrollments.map(e => e.id),
         },
       },
     });
 
     // compare DB record count against enrollments.length
     // if the counts don't match, then records need updated
-    if (req.user.Enrollments.length !== req.foundEnrollments.length) {
+    if (req.user.enrollments.length !== req.foundEnrollments.length) {
       next();
     }
   } catch (error) {
@@ -75,7 +75,7 @@ const compareEnrollments = async (req, res, next) => {
 // Find/Create all enrollments for user
 const updateEnrollments = async (req, res, next) => {
   try {
-    const enrollmentQueries = req.user.Enrollments.map(e => db.Enrollment.findOrCreate({ where: { id: e.id }, defaults: e }));
+    const enrollmentQueries = req.user.enrollments.map(e => db.Enrollment.findOrCreate({ where: { id: e.id }, defaults: e }));
     req.Enrollments = await Promise.all(enrollmentQueries);
     next();
   } catch (error) {
@@ -88,7 +88,7 @@ const associateEnrollments = async (req) => {
   const mappedEnrollmentIds = req.Enrollments.map(e => e[0]);
 
   // Determine which enrollments are mapped in through table
-  const unmappedEnrollmentIds = req.user.Enrollments.filter(e => !mappedEnrollmentIds.includes(e.id)).map(e => e.id);
+  const unmappedEnrollmentIds = req.user.enrollments.filter(e => !mappedEnrollmentIds.includes(e.id)).map(e => e.id);
 
   try {
     await req.User.addEnrollments(unmappedEnrollmentIds);
