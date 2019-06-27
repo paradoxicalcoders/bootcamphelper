@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const session = require('express-session');
+const socketIo = require('socket.io');
 const passport = require('./config/passport');
 const socketManager = require('./services/socketManager');
 
@@ -43,6 +44,6 @@ const server = app.listen(PORT, () => {
   console.log(`🌎 ==> API server now on port ${PORT}!`);
 });
 
-const io = require('socket.io').listen(server);
+const io = socketIo(server);
 
 io.on('connection', socketManager);
