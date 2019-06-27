@@ -3,7 +3,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('./config/passport');
-
+const db = require('./models');
 const routes = require('./routes');
 
 const PORT = process.env.PORT || 3001;
@@ -37,7 +37,20 @@ if (process.env.NODE_ENV === 'production') {
 // Add routes, both API and view
 app.use(routes);
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line
-  console.log(`🌎 ==> API server now on port ${PORT}!`);
-});
+let FORCE_SCHEMA = false;
+if (process.env.NODE_ENV !== 'production') {
+  FORCE_SCHEMA = true;
+}
+
+db.sequelize.authenticate()
+  .then(() => {
+    db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
+      app.listen(PORT, () => {
+        // eslint-disable-next-line
+        console.log(`🌎 ==> API server now on port ${PORT}!`);
+      });
+    });
+  })
+  .catch(err => console.error(err));
+
+module.exports = app;
