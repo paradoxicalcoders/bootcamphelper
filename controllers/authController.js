@@ -52,8 +52,6 @@ const compareEnrollments = async (req, res, next) => {
     // fetch the dynamic table
     const UserEnrollment = db.sequelize.model('user_enrollments');
 
-    console.log('Enrollments', req.user.Enrollments.map(e => e.id));
-
     // Check the associate count of enrollments for user
     req.foundEnrollments = await UserEnrollment.findAll({
       where: {
@@ -91,8 +89,6 @@ const associateEnrollments = async (req) => {
 
   // Determine which enrollments are mapped in through table
   const unmappedEnrollmentIds = req.user.Enrollments.filter(e => !mappedEnrollmentIds.includes(e.id)).map(e => e.id);
-
-  console.log(unmappedEnrollmentIds);
 
   try {
     await req.User.addEnrollments(unmappedEnrollmentIds);
