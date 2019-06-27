@@ -7,8 +7,12 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Server",
-      "program": "${workspaceFolder}/server.js"
-    }
+      "name": "nodemon",
+      "runtimeExecutable": "nodemon",
+      "program": "${workspaceFolder}/server.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
   ]
 }
