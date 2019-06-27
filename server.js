@@ -20,7 +20,7 @@ app.use(passport.session());
 const WHITE_LIST = ['http://localhost:3001', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
-    console.log(origin);
+    console.log('Origin: ', origin);
     if (WHITE_LIST.includes(origin) || !origin) {
       return callback(null, true);
     }

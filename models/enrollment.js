@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   Enrollment.associate = (models) => {
-    models.Enrollment.hasMany(models.User);
     models.Enrollment.hasMany(models.Question);
     models.Enrollment.belongsToMany(models.Question, { through: 'enrollment_questions' });
     models.Enrollment.belongsToMany(models.User, { through: 'user_enrollments' });
