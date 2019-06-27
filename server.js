@@ -4,7 +4,7 @@ const cors = require('cors');
 const session = require('express-session');
 const socketIo = require('socket.io');
 const passport = require('./config/passport');
-const socketManager = require('./services/socketManager').socketManager;
+const { socketManager } = require('./services/socketManager');
 
 const db = require('./models');
 const routes = require('./routes');
@@ -45,8 +45,6 @@ const server = app.listen(PORT, () => {
   console.log(`🌎 ==> API server now on port ${PORT}!`);
 });
 
-const io = socketIo(server);
-io.on('connection', socketManager);
 
 let FORCE_SCHEMA = false;
 if (process.env.NODE_ENV !== 'production') {
@@ -56,10 +54,12 @@ if (process.env.NODE_ENV !== 'production') {
 db.sequelize.authenticate()
   .then(() => {
     db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
-      app.listen(PORT, () => {
-        // eslint-disable-next-line
-        console.log(`🌎 ==> API server now on port ${PORT}!`);
-      });
+      const io = socketIo(server);
+      io.on('connection', socketManager);
+    // app.listen(PORT, () => {
+    //   // eslint-disable-next-line
+    //   console.log(`🌎 ==> API server now on port ${PORT}!`);
+    //   });
     });
   })
   .catch(err => console.error(err));

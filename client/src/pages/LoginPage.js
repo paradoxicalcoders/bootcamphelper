@@ -115,7 +115,7 @@ class LoginPage extends Component {
         email: this.state.email,
         password: this.state.password,
       });
-      console.log(response);
+      console.log(response, " response...");
       if (response.data && response.data.userAccount) {
         const { userAccount, enrollments } = response.data
         window.sessionStorage.setItem('userAccount', JSON.stringify(userAccount));
