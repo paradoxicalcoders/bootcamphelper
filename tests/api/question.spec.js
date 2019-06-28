@@ -1,6 +1,6 @@
 const chai = require('chai');
 const request = require('supertest');
-const server = require('../server');
+const server = require('../../server');
 const agent = request.agent(server);
 
 const { expect } = chai;
