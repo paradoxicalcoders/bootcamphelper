@@ -23,7 +23,7 @@ app.use(passport.session());
 const WHITE_LIST = ['http://localhost:3001', 'http://localhost:3001/', 'http://kubootcamphelper.herokuapp.com', 'https://kubootcamphelper.herokuapp.com'];
 const corsOptions = {
   origin: (origin, callback) => {
-    console.log(origin);
+    console.log('Origin: ', origin); // eslint-disable-line no-console
     if (WHITE_LIST.includes(origin) || !origin) {
       return callback(null, true);
     }
@@ -45,23 +45,22 @@ const server = app.listen(PORT, () => {
   console.log(`🌎 ==> API server now on port ${PORT}!`);
 });
 
-const io = socketIo(server);
-io.on('connection', socketManager);
-
 let FORCE_SCHEMA = false;
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'test') {
   FORCE_SCHEMA = true;
 }
 
 db.sequelize.authenticate()
-  .then(() => {
-    db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
-      app.listen(PORT, () => {
-        // eslint-disable-next-line
-        console.log(`🌎 ==> API server now on port ${PORT}!`);
-      });
+.then(() => {
+  db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
+    const io = socketIo(server);
+    io.on('connection', socketManager);
+      // app.listen(PORT, () => {
+      //   // eslint-disable-next-line
+      //   console.log(`🌎 ==> API server now on port ${PORT}!`);
+      // });
     });
   })
-  .catch(err => console.error(err));
+  .catch(console.error); // eslint-disable-line no-console
 
 module.exports = app;

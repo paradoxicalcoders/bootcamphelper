@@ -13,9 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     authToken: DataTypes.STRING,
   }, {});
 
-  // User.associate = (models) => {
-  //   // associations can be defined here
-  // };
+  User.associate = (models) => {
+    models.User.hasMany(models.Response);
+    models.User.belongsToMany(models.Enrollment, { through: 'user_enrollments' });
+  };
 
   return User;
 };

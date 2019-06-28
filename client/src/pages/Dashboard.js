@@ -12,41 +12,40 @@ class Dashboard extends Component {
     this.state = {
       authenticated: true,
       userAccount: {},
-      enrollments: [],
-      socketUrl: null,
+      socketUrl: (process.env.NODE_ENV === 'production' ? "http://kubootcamphelper.herokuapp.com" : "http://localhost:3001"),
       socket: null,
     };
 
+    console.log(this.state.socketUrl, " - STATE SOCKET URL");
+
     this.onSignOut = this.onSignOut.bind(this);
   }
-  
+
   componentWillMount() {
     if (process.env.NODE_ENV === 'production') {
-      this.setState({socketUrl: "http://kubootcamphelper.herokuapp.com"})
+      this.setState({ socketUrl: "http://kubootcamphelper.herokuapp.com" })
     } else {
-      this.setState({socketUrl: "http://localhost:3001"})
+      this.setState({ socketUrl: "http://localhost:3001" })
     }
-    this.initSocket()
+    this.initSocket();
   }
 
   componentDidMount() {
     const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
-    const enrollments = JSON.parse(window.sessionStorage.getItem('enrollments'));
-    const authenticated = userAccount && enrollments ? true : false;
+    const authenticated = userAccount && userAccount.email ? true : false;
     this.setState({
       userAccount,
-      enrollments,
-      authenticated
+      authenticated,
     });
     this.emitUser(userAccount);
   }
 
   initSocket = () => {
-    const socketUrl = 'http://localhost:3001/'
-    const socket = io(socketUrl)
-    this.setState({socket})
+    // const socketUrl = 'http://localhost:3001/'
+    const socket = io(this.state.socketUrl)
+    this.setState({ socket })
   }
-  
+
   emitUser = (userAccount) => {
     const { socket } = this.state
     socket.emit('USER_CONNECTED', userAccount)
@@ -54,7 +53,6 @@ class Dashboard extends Component {
 
   render() {
     console.log(this.state.userAccount);
-    console.log(this.state.enrollments);
     if (!this.state.authenticated) {
       return <Redirect to='/' />;
     }
@@ -75,9 +73,17 @@ class Dashboard extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Enrollments enrollments={this.state.enrollments} />
+        {this.renderEnrollments()}
       </Box>
     );
+  }
+
+  renderEnrollments() {
+    if (this.state.userAccount.enrollments) {
+      return (
+        <Enrollments enrollments={this.state.userAccount.enrollments} />
+      )
+    }
   }
 
   renderGravatar() {

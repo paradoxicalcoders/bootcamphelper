@@ -12,10 +12,10 @@ const printJson = obj => JSON.stringify(obj, null, 2);
 const EnrollmentItem = (props) => (
   <TableRow>
     <TableCell>{props.enrollment.id}</TableCell>
-    <TableCell>{props.enrollment.course.cohort.program.programType.name}</TableCell>
-    <TableCell>{props.enrollment.course.name}</TableCell>
-    <TableCell>{props.enrollment.course.startDate}</TableCell>
-    <TableCell>{props.enrollment.course.endDate}</TableCell>
+    <TableCell>{props.enrollment.courseId}</TableCell>
+    <TableCell>{props.enrollment.cohortId}</TableCell>
+    <TableCell>{props.enrollment.startDate}</TableCell>
+    <TableCell>{props.enrollment.endDate}</TableCell>
   </TableRow>
 );
 
