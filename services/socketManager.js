@@ -8,6 +8,11 @@ module.exports = {
       console.log(user);
       console.log(test());
     });
+
+    socket.on('ANNOUNCEMENT', (announcement) => {
+      console.log(announcement)
+      socket.broadcast.emit('GET_ANNOUNCEMENT', announcement)
+    })
   }
 };
 
