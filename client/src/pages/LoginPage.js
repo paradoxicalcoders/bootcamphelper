@@ -14,6 +14,7 @@ class LoginPage extends Component {
       password: '',
       authenticated: false,
       isLoading: false,
+      error: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -115,20 +116,19 @@ class LoginPage extends Component {
         email: this.state.email,
         password: this.state.password,
       });
-      console.log(response);
-      if (response.data && response.data.userAccount) {
-        const { userAccount, enrollments } = response.data
-        window.sessionStorage.setItem('userAccount', JSON.stringify(userAccount));
-        window.sessionStorage.setItem('enrollments', JSON.stringify(enrollments));
-        this.setState({
+      if (response.data && response.data.email) {
+        window.sessionStorage.setItem('userAccount', JSON.stringify(response.data));
+        return this.setState({
           authenticated: true,
           isLoading: false,
         });
       }
+      throw new Error('Houston, we have a problem');
     } catch (err) {
       console.log(err);
       this.setState({
         isLoading: false,
+        error: err.toString(),
       });
     }
   }
