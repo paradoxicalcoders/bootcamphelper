@@ -12,7 +12,7 @@ cache:
   directories:
     - node_modules
 
-before_intall:
+before_script:
     - mysql -uroot < tests/travis.sql
 
 script:
