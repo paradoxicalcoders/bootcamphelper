@@ -56,9 +56,10 @@ const compareEnrollments = async (req, res, next) => {
     req.foundEnrollments = await UserEnrollment.findAll({
       where: {
         user_id: req.user.id,
-        enrollment_id: {
-          [db.Sequelize.Op.in]: req.user.enrollments.map(e => e.id),
-        },
+        // FIXME: Shouldn't need this second WHERE clause
+        // enrollment_id: {
+        //   [db.Sequelize.Op.in]: req.user.enrollments.map(e => e.id),
+        // },
       },
     });
 
@@ -83,12 +84,20 @@ const updateEnrollments = async (req, res, next) => {
   }
 };
 
+// Helper method to map to an objects id
+const toId = enrollment => enrollment.id;
+
 // Intersect the enrollment records against the
 const associateEnrollments = async (req) => {
-  const mappedEnrollmentIds = req.Enrollments.map(e => e[0]);
+  let unmappedEnrollmentIds;
 
-  // Determine which enrollments are mapped in through table
-  const unmappedEnrollmentIds = req.user.enrollments.filter(e => !mappedEnrollmentIds.includes(e.id)).map(e => e.id);
+  if (req.foundEnrollments) {
+    // Determine which enrollments are mapped in through table
+    const mappedEnrollmentIds = req.foundEnrollments.map(toId);
+    unmappedEnrollmentIds = req.user.enrollments.filter(e => !mappedEnrollmentIds.includes(e.id)).map(toId);
+  } else {
+    unmappedEnrollmentIds = req.user.enrollments.map(toId);
+  }
 
   try {
     await req.User.addEnrollments(unmappedEnrollmentIds);

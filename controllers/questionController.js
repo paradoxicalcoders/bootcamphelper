@@ -3,7 +3,9 @@ const db = require('../models');
 
 const create = async (req, res) => {
   try {
-    res.json(await db.Question.create(req.body));
+    const question = await db.Question.create(req.body, { include: [db.Enrollment] });
+    await question.addEnrollments(req.body.enrollments);
+    res.json(question);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -11,7 +13,15 @@ const create = async (req, res) => {
 
 const readAll = async (req, res) => {
   try {
-    res.json(await db.Question.findAll({}));
+    res.json(await db.Question.findAll({
+      include: [{
+        model: db.Enrollment,
+        // attributes: ['id'],
+        through: {
+          attributes: [],
+        },
+      }],
+    }));
   } catch (error) {
     res.status(500).send(error);
   }
@@ -22,6 +32,12 @@ const filter = (req, res, next) => {
     where: {
       id: req.params.id,
     },
+    include: [{
+      model: db.Enrollment,
+      through: {
+        attributes: [],
+      },
+    }],
   };
 
   next();

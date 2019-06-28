@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use(routes);
 
 let FORCE_SCHEMA = false;
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'test') {
   FORCE_SCHEMA = true;
 }
 
