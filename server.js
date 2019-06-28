@@ -31,15 +31,19 @@ app.use(routes);
 // Dynamically force schema refresh only for 'test'
 const FORCE_SCHEMA = process.env.NODE_ENV === 'test';
 
+
 db.sequelize
   .authenticate()
   .then(() => {
-    db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
-      app.listen(PORT, () => {
-        // eslint-disable-next-line
-        console.log(`🌎 ==> API server now on port ${PORT}!`);
-      });
-    });
+    db.sequelize.sync({ force: FORCE_SCHEMA })
+      .then(() => {
+        app.listen(PORT, () => {
+          // eslint-disable-next-line
+          console.log(`🌎 ==> API server now on port ${PORT}!`);
+          app.emit('appStarted');
+        });
+      })
+      .catch(console.error); // eslint-disable-line no-console
   })
   .catch(console.error); // eslint-disable-line no-console
 
