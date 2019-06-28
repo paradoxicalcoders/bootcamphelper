@@ -5,9 +5,15 @@ language: node_js
 node_js:
   - node
 
+services:
+  - mysql
+
 cache:
   directories:
     - node_modules
+
+before_intall:
+    - mysql -uroot < tests/travis.sql
 
 script:
   - yarn lint
