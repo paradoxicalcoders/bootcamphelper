@@ -12,9 +12,6 @@ class Dashboard extends Component {
     this.state = {
       authenticated: true,
       userAccount: {},
-      enrollments: [],
-      socketUrl: null,
-      socket: null,
     };
 
     this.onSignOut = this.onSignOut.bind(this);
@@ -31,12 +28,10 @@ class Dashboard extends Component {
 
   componentDidMount() {
     const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
-    const enrollments = JSON.parse(window.sessionStorage.getItem('enrollments'));
-    const authenticated = userAccount && enrollments ? true : false;
+    const authenticated = userAccount && userAccount.email ? true : false;
     this.setState({
       userAccount,
-      enrollments,
-      authenticated
+      authenticated,
     });
     this.emitUser(userAccount);
   }
@@ -54,7 +49,6 @@ class Dashboard extends Component {
 
   render() {
     console.log(this.state.userAccount);
-    console.log(this.state.enrollments);
     if (!this.state.authenticated) {
       return <Redirect to='/' />;
     }
@@ -75,9 +69,17 @@ class Dashboard extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Enrollments enrollments={this.state.enrollments} />
+        { this.renderEnrollments() }
       </Box>
     );
+  }
+
+  renderEnrollments() {
+    if (this.state.userAccount.enrollments) {
+      return (
+        <Enrollments enrollments={this.state.userAccount.enrollments} />
+      )
+    }
   }
 
   renderGravatar() {
