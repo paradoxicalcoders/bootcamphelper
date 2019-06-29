@@ -45,9 +45,8 @@ const server = app.listen(PORT, () => {
   console.log(`🌎 ==> API server now on port ${PORT}!`);
 });
 
-
 let FORCE_SCHEMA = false;
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'test') {
   FORCE_SCHEMA = true;
 }
 
@@ -56,10 +55,10 @@ db.sequelize.authenticate()
     db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
       const io = socketIo(server);
       io.on('connection', socketManager);
-    // app.listen(PORT, () => {
-    //   // eslint-disable-next-line
-    //   console.log(`🌎 ==> API server now on port ${PORT}!`);
-    //   });
+      // app.listen(PORT, () => {
+      //   // eslint-disable-next-line
+      //   console.log(`🌎 ==> API server now on port ${PORT}!`);
+      // });
     });
   })
   .catch(console.error); // eslint-disable-line no-console

@@ -15,5 +15,10 @@ module.exports = {
       users.push(user);
       console.log(users);
     });
+
+    socket.on('ANNOUNCEMENT', (announcement) => {
+      console.log(announcement);
+      socket.broadcast.emit('GET_ANNOUNCEMENT', announcement);
+    });
   },
 };
