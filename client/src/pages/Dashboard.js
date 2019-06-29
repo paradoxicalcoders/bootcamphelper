@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-<<<<<<< HEAD
 import io from 'socket.io-client';
-import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
-=======
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@material-ui/core';
->>>>>>> 16f7bcd77e47eeccc2c3bdb408c6f4a59ecbc23c
 import Gravatar from 'react-gravatar';
 import AdminDashboard from 'components/AdminDashboard';
 import Enrollments from 'components/Enrollments';
@@ -17,12 +13,9 @@ class Dashboard extends Component {
     this.state = {
       authenticated: true,
       userAccount: {},
-<<<<<<< HEAD
-=======
       socketUrl: (process.env.NODE_ENV === 'production' ? "http://kubootcamphelper.herokuapp.com" : "http://localhost:3001"),
       socket: null,
       announcements: [],
->>>>>>> 858bb88cc7c77d181600570a2868054968d4afb5
     };
 
     console.log(this.state.socketUrl, " - STATE SOCKET URL");
@@ -93,18 +86,6 @@ class Dashboard extends Component {
               >
                 Sign Out
             </Button>
-<<<<<<< HEAD
-            </Toolbar>
-          </AppBar>
-          {this.renderEnrollments()}
-        </Box>
-        <br />
-        {/* {this.renderAnnouncement()} */}
-        {(this.state.announcements ? this.state.announcements.map(announcement => <div key={announcement}><p>{announcement}</p></div>) : false)}
-        <br />
-        {(this.state.userAccount.isAdmin ? <Button onClick={this.sendAnnouncement} color="inherit">Send announcement</Button> : false )}
-      </div>
-=======
           </Toolbar>
         </AppBar>
         <Container>
@@ -113,7 +94,12 @@ class Dashboard extends Component {
           </Box>
         </Container>
       </Box>
->>>>>>> 16f7bcd77e47eeccc2c3bdb408c6f4a59ecbc23c
+      <br />
+        {/* {this.renderAnnouncement()} */}
+        {(this.state.announcements ? this.state.announcements.map(announcement => <div key={announcement}><p>{announcement}</p></div>) : false)}
+        <br />
+        {(this.state.userAccount.isAdmin ? <Button onClick={this.sendAnnouncement} color="inherit">Send announcement</Button> : false )}
+      </div>
     );
   }
 
