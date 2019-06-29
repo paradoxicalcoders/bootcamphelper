@@ -2,6 +2,8 @@
   "name": "com.paradoxicalcoders.bootcamphelper-server",
   "version": "1.0.0",
   "description": "KU Bootcamp Helper",
+  "author": "Paradoxical Coders",
+  "license": "MIT",
   "main": "server.js",
   "engines": {
     "node": "12.x"
@@ -12,17 +14,18 @@
   },
   "homepage": "https://kubootcamphelper.herokuapp.com/",
   "scripts": {
-    "start": "if-env NODE_ENV=production && yarn run start:prod || yarn run start:dev",
+    "start": "if-env NODE_ENV=production && yarn start:prod || yarn start:dev",
     "start:prod": "node server.js",
-    "start:dev": "concurrently \"nodemon\" \"yarn run client\"",
-    "client": "cd client && yarn run start",
+    "start:dev": "yarn kill && concurrently \"nodemon\" \"yarn client\"",
+    "server": "yarn kill && nodemon",
+    "client": "cd client && yarn start",
     "install": "cd client && yarn install",
-    "build": "cd client && yarn run build",
-    "heroku-postbuild": "yarn run build",
+    "build": "cd client && yarn build",
+    "heroku-postbuild": "yarn build",
     "kill": "kill-port 3001",
     "lint": "eslint --quiet .",
     "lint:fix": "eslint --fix .",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha",
+    "test": "yarn kill && NODE_ENV=test nyc --reporter=html --reporter=text mocha tests/**/*.spec.js --exit",
     "test:coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "nodemonConfig": {
@@ -30,7 +33,7 @@
       "restart": "yarn kill",
       "crash": "yarn kill"
     },
-    "delay": "2000",
+    "delay": "3000",
     "ignore": [
       "client/*"
     ]
@@ -40,11 +43,10 @@
       "client"
     ]
   },
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
-    "concurrently": "^4.1.0",
+    "chai-http": "^4.3.0",
+    "concurrently": "^4.1.1",
     "coveralls": "^3.0.4",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
@@ -54,17 +56,16 @@
     "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^1.19.1",
     "nyc": "^14.1.1",
-    "sequelize-cli": "^5.5.0"
+    "sequelize-cli": "^5.5.0",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
-    "@papijs/papi": "^0.3.1",
     "axios": "^0.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "helmet": "^3.18.0",
     "if-env": "^1.0.4",
-    "mongoose": "^5.6.0",
     "mysql2": "^1.6.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",

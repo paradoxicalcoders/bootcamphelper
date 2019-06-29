@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
-import Enrollments from 'components/Enrollments'
+import AdminDashboard from 'components/AdminDashboard';
+import Enrollments from 'components/Enrollments';
 
 class Dashboard extends Component {
 
@@ -11,7 +12,6 @@ class Dashboard extends Component {
     this.state = {
       authenticated: true,
       userAccount: {},
-      enrollments: [],
     };
 
     this.onSignOut = this.onSignOut.bind(this);
@@ -19,18 +19,15 @@ class Dashboard extends Component {
 
   componentDidMount() {
     const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
-    const enrollments = JSON.parse(window.sessionStorage.getItem('enrollments'));
-    const authenticated = userAccount && enrollments ? true : false;
+    const authenticated = userAccount && userAccount.email ? true : false;
     this.setState({
       userAccount,
-      enrollments,
       authenticated,
     });
   }
 
   render() {
     console.log(this.state.userAccount);
-    console.log(this.state.enrollments);
     if (!this.state.authenticated) {
       return <Redirect to='/' />;
     }
@@ -51,9 +48,30 @@ class Dashboard extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Enrollments enrollments={this.state.enrollments} />
+        <Container>
+          <Box pt={10}>
+          { this.renderDashboards()}
+          </Box>
+        </Container>
       </Box>
     );
+  }
+
+  renderDashboards() {
+    if (this.state.userAccount && this.state.userAccount.isAdmin) {
+      return (
+        <AdminDashboard enrollments={this.state.userAccount.enrollments} />
+      )
+    }
+    return this.renderEnrollments();
+  }
+
+  renderEnrollments() {
+    if (this.state.userAccount.enrollments) {
+      return (
+        <Enrollments enrollments={this.state.userAccount.enrollments} />
+      )
+    }
   }
 
   renderGravatar() {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import 'index.css';
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, TextField } from '@material-ui/core';
+import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Snackbar, TextField } from '@material-ui/core';
 import LoginPageCardHeader from 'components/LoginPageCardHeader.js';
 import axios from 'axios';
 
@@ -14,10 +14,12 @@ class LoginPage extends Component {
       password: '',
       authenticated: false,
       isLoading: false,
+      error: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
   componentDidMount() {
@@ -55,6 +57,7 @@ class LoginPage extends Component {
                 label="Email Address"
                 name="email"
                 autoFocus
+                autoComplete="email"
                 value={this.state.email} onChange={this.handleChange}
               />
               <TextField
@@ -83,8 +86,21 @@ class LoginPage extends Component {
             </form>
           </CardContent>
         </Card>
+        <Snackbar
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          open={!!this.state.error}
+          onClose={this.closeSnackbar}
+          message={this.state.error}
+          variant="warning"
+        />
       </Box>
     );
+  }
+
+  closeSnackbar() {
+    this.setState({
+      error: '',
+    })
   }
 
   renderLoginButtonText() {
@@ -115,20 +131,22 @@ class LoginPage extends Component {
         email: this.state.email,
         password: this.state.password,
       });
-      console.log(response);
-      if (response.data && response.data.userAccount) {
-        const { userAccount, enrollments } = response.data
-        window.sessionStorage.setItem('userAccount', JSON.stringify(userAccount));
-        window.sessionStorage.setItem('enrollments', JSON.stringify(enrollments));
-        this.setState({
+      if (response.data && response.data.email) {
+        window.sessionStorage.setItem('userAccount', JSON.stringify(response.data));
+        return this.setState({
           authenticated: true,
           isLoading: false,
         });
       }
+      throw new Error('Houston, we have a problem');
     } catch (err) {
-      console.log(err);
+      let error = err.toString();
+      if (error.indexOf('401') !== -1) {
+        error = 'That password didn\'t work.';
+      }
       this.setState({
         isLoading: false,
+        error,
       });
     }
   }

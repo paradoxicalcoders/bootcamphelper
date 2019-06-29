@@ -1,5 +1,5 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,16 +12,15 @@ const printJson = obj => JSON.stringify(obj, null, 2);
 const EnrollmentItem = (props) => (
   <TableRow>
     <TableCell>{props.enrollment.id}</TableCell>
-    <TableCell>{props.enrollment.course.cohort.program.programType.name}</TableCell>
-    <TableCell>{props.enrollment.course.name}</TableCell>
-    <TableCell>{props.enrollment.course.startDate}</TableCell>
-    <TableCell>{props.enrollment.course.endDate}</TableCell>
+    <TableCell>{props.enrollment.courseId}</TableCell>
+    <TableCell>{props.enrollment.cohortId}</TableCell>
+    <TableCell>{props.enrollment.startDate}</TableCell>
+    <TableCell>{props.enrollment.endDate}</TableCell>
   </TableRow>
 );
 
 const Enrollments = (props) => (
-  <Container>
-    <h1 className="">Enrollments</h1>
+  <Box>
     <Paper>
       <Table>
         <TableHead>
@@ -41,7 +40,7 @@ const Enrollments = (props) => (
     <Paper>
       <pre>{printJson(props.enrollments)}</pre>
     </Paper>
-  </Container>
+  </Box>
 );
 
 export default Enrollments;
