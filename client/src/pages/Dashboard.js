@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+<<<<<<< HEAD
 import io from 'socket.io-client';
 import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
+=======
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@material-ui/core';
+>>>>>>> 16f7bcd77e47eeccc2c3bdb408c6f4a59ecbc23c
 import Gravatar from 'react-gravatar';
-import Enrollments from 'components/Enrollments'
+import AdminDashboard from 'components/AdminDashboard';
+import Enrollments from 'components/Enrollments';
 
 class Dashboard extends Component {
 
@@ -88,6 +93,7 @@ class Dashboard extends Component {
               >
                 Sign Out
             </Button>
+<<<<<<< HEAD
             </Toolbar>
           </AppBar>
           {this.renderEnrollments()}
@@ -98,7 +104,26 @@ class Dashboard extends Component {
         <br />
         {(this.state.userAccount.isAdmin ? <Button onClick={this.sendAnnouncement} color="inherit">Send announcement</Button> : false )}
       </div>
+=======
+          </Toolbar>
+        </AppBar>
+        <Container>
+          <Box pt={10}>
+          { this.renderDashboards()}
+          </Box>
+        </Container>
+      </Box>
+>>>>>>> 16f7bcd77e47eeccc2c3bdb408c6f4a59ecbc23c
     );
+  }
+
+  renderDashboards() {
+    if (this.state.userAccount && this.state.userAccount.isAdmin) {
+      return (
+        <AdminDashboard enrollments={this.state.userAccount.enrollments} />
+      )
+    }
+    return this.renderEnrollments();
   }
 
   renderEnrollments() {
