@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import 'index.css';
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, TextField } from '@material-ui/core';
+import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Snackbar, TextField } from '@material-ui/core';
 import LoginPageCardHeader from 'components/LoginPageCardHeader.js';
 import axios from 'axios';
 
@@ -19,6 +19,7 @@ class LoginPage extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +57,7 @@ class LoginPage extends Component {
                 label="Email Address"
                 name="email"
                 autoFocus
+                autoComplete="email"
                 value={this.state.email} onChange={this.handleChange}
               />
               <TextField
@@ -84,8 +86,21 @@ class LoginPage extends Component {
             </form>
           </CardContent>
         </Card>
+        <Snackbar
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          open={!!this.state.error}
+          onClose={this.closeSnackbar}
+          message={this.state.error}
+          variant="warning"
+        />
       </Box>
     );
+  }
+
+  closeSnackbar() {
+    this.setState({
+      error: '',
+    })
   }
 
   renderLoginButtonText() {
@@ -125,10 +140,13 @@ class LoginPage extends Component {
       }
       throw new Error('Houston, we have a problem');
     } catch (err) {
-      console.log(err);
+      let error = err.toString();
+      if (error.indexOf('401') !== -1) {
+        error = 'That password didn\'t work.';
+      }
       this.setState({
         isLoading: false,
-        error: err.toString(),
+        error,
       });
     }
   }

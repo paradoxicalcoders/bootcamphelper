@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { AppBar, Box, Button, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
-import Enrollments from 'components/Enrollments'
+import AdminDashboard from 'components/AdminDashboard';
+import Enrollments from 'components/Enrollments';
 
 class Dashboard extends Component {
 
@@ -47,9 +48,22 @@ class Dashboard extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        { this.renderEnrollments() }
+        <Container>
+          <Box pt={10}>
+          { this.renderDashboards()}
+          </Box>
+        </Container>
       </Box>
     );
+  }
+
+  renderDashboards() {
+    if (this.state.userAccount && this.state.userAccount.isAdmin) {
+      return (
+        <AdminDashboard enrollments={this.state.userAccount.enrollments} />
+      )
+    }
+    return this.renderEnrollments();
   }
 
   renderEnrollments() {
