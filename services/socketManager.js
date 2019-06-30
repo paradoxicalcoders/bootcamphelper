@@ -1,24 +1,16 @@
-// const { io } = require('../server');
-function test() {
-  return 'test';
-}
-
-const users = [];
 
 module.exports = {
   socketManager: (socket) => {
-    // console.log('Socket ID: ', socket.id);
+    console.log('Socket ID: ', socket.id);
 
-    socket.on('USER_CONNECTED', (user) => {
-      console.log(user);
-      console.log(test());
-      users.push(user);
-      console.log(users);
+    socket.on('SEND_QUESTION', (question, id) => {
+      // console.log(question, id);
+      socket.broadcast.emit('GET_QUESTION', { question, id });
     });
 
-    socket.on('ANNOUNCEMENT', (announcement) => {
-      console.log(announcement);
-      socket.broadcast.emit('GET_ANNOUNCEMENT', announcement);
+    socket.on('SEND_RESPONSE', (val) => {
+      // console.log(val, ' - RESPONSE VAL');
+      socket.broadcast.emit('GET_RESPONSE', val);
     });
   },
 };

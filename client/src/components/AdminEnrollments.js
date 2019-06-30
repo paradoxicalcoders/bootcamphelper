@@ -20,14 +20,22 @@ class AdminEnrollments extends Component {
       selectedClasses: [],
       selectAll: false,
       question: '',
+      questionCreated: null,
+      responses: [],
+      responseCount: 0,
     };
 
     this.toggleSelectAll = this.toggleSelectAll.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
 
+  }
+  
+  componentDidMount() {
+    this.addResponse();
+  }
+  
   render() {
     return (
       <Box>
@@ -94,8 +102,27 @@ class AdminEnrollments extends Component {
             </Box>
           </Paper>
         </Box>
+
+        {this.state.questionCreated ? (
+          <div>
+            <h2>{this.state.question}</h2>
+            <p>Response Count: {this.state.responseCount}</p>
+            <p>Average: {this.average()}</p>
+          </div>
+        ) : false}
       </Box>
     );
+  }
+
+  average() {
+    const {responses} = this.state;
+    if (responses.length) {
+      let sum = responses.reduce((previous, current) => current += previous);
+      let avg = sum / responses.length;
+      return parseFloat(avg).toFixed(1);
+    } else {
+      return 0
+    }
   }
 
   toggleSelectAll(e) {
@@ -139,14 +166,30 @@ class AdminEnrollments extends Component {
 
     console.log(this.state.question);
     try {
+      const { socket } = this.props;
       const response = await axios.post('/api/v1/questions', {
         question: this.state.question,
         enrollments: this.state.selectedClasses,
       });
       console.log(response.data);
+      const { question, id } = response.data;
+      socket.emit('SEND_QUESTION', { question, id });
+      this.setState({questionCreated: true})
     } catch (err) {
       console.log(err);
     }
+  }
+
+  addResponse() {
+    const { socket } = this.props;
+    socket.on('GET_RESPONSE', (response) => {
+      console.log(response, " - RESPONSE");
+      let { responseCount } = this.state;
+      this.setState(prevState => ({
+        responses: [...prevState.responses, response],
+        responseCount: responseCount + 1
+      }))
+    });
   }
 }
 
