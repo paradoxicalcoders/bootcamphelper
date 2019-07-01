@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import 'index.css';
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Snackbar, TextField } from '@material-ui/core';
-import LoginPageCardHeader from 'components/LoginPageCardHeader.js';
 import axios from 'axios';
+import 'index.css';
+
+import Box from '@material-ui/core/Box';
+import Button  from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import TextField  from '@material-ui/core/TextField';
+
+import LoginPageCardHeader from 'components/LoginPageCardHeader.js';
+import Snackbar from 'components/Snackbar';
 
 class LoginPage extends Component {
 
@@ -87,11 +96,10 @@ class LoginPage extends Component {
           </CardContent>
         </Card>
         <Snackbar
-          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
           open={!!this.state.error}
           onClose={this.closeSnackbar}
           message={this.state.error}
-          variant="warning"
+          variant="error"
         />
       </Box>
     );
@@ -112,7 +120,6 @@ class LoginPage extends Component {
     return (
       <span>Sign In</span>
     );
-
   }
 
   handleChange(event) {

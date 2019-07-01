@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -9,9 +10,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
 
 import AdminEnrollmentItem from './AdminEnrollmentItem';
+import Snackbar from './Snackbar';
 
 class AdminEnrollments extends Component {
   constructor(props) {
@@ -23,13 +24,15 @@ class AdminEnrollments extends Component {
       questionCreated: null,
       responses: [],
       responseCount: 0,
+      snackbarVariant: 'warning',
+      snackbarMessage: '',
     };
 
     this.toggleSelectAll = this.toggleSelectAll.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.closeSnackbar = this.closeSnackbar.bind(this);
   }
   
   componentDidMount() {
@@ -94,6 +97,7 @@ class AdminEnrollments extends Component {
                     fullWidth
                     variant="contained"
                     color="primary"
+                    disabled={!(this.state.question && this.state.selectedClasses.length > 0)}
                   >
                     Submit Question
                   </Button>
@@ -110,6 +114,13 @@ class AdminEnrollments extends Component {
             <p>Average: {this.average()}</p>
           </div>
         ) : false}
+
+        <Snackbar
+          open={!!this.state.snackbarMessage}
+          onClose={this.closeSnackbar}
+          message={this.state.snackbarMessage}
+          variant={this.state.snackbarVariant}
+        />
       </Box>
     );
   }
@@ -164,7 +175,6 @@ class AdminEnrollments extends Component {
   async handleSubmit(event) {
     event.preventDefault();
 
-    console.log(this.state.question);
     try {
       const { socket } = this.props;
       const response = await axios.post('/api/v1/questions', {
@@ -174,10 +184,27 @@ class AdminEnrollments extends Component {
       console.log(response.data);
       const { question, id } = response.data;
       socket.emit('SEND_QUESTION', { question, id });
-      this.setState({questionCreated: true})
+      this.setState({
+        questionCreated: true,
+        isLoading: false,
+        snackbarMessage: 'New question created!',
+        snackbarVariant: 'success',
+        question: '',
+      });
     } catch (err) {
       console.log(err);
+      this.setState({
+        isLoading: false,
+        snackbarMessage: err.toString(),
+        snackbarVariant: 'error',
+      });
     }
+  }
+
+  closeSnackbar() {
+    this.setState({
+      snackbarMessage: '',
+    })
   }
 
   addResponse() {
