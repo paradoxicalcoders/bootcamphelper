@@ -96,7 +96,6 @@ class LoginPage extends Component {
           </CardContent>
         </Card>
         <Snackbar
-          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
           open={!!this.state.error}
           onClose={this.closeSnackbar}
           message={this.state.error}
@@ -121,7 +120,6 @@ class LoginPage extends Component {
     return (
       <span>Sign In</span>
     );
-
   }
 
   handleChange(event) {
