@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -29,6 +30,15 @@ if (process.env.NODE_ENV === 'production') {
 // Add routes, both API and view
 app.use(routes);
 
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+// Serve up static assets (usually on heroku)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (_, res) => {
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
+  });
+}
+
 const server = app.listen(PORT, () => {
   // eslint-disable-next-line
   console.log(`🌎 ==> API server now on port ${PORT}!`);
@@ -36,7 +46,6 @@ const server = app.listen(PORT, () => {
 
 // Dynamically force schema refresh only for 'test'
 const FORCE_SCHEMA = process.env.NODE_ENV === 'test';
-
 
 db.sequelize
   .authenticate()
