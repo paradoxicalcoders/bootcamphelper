@@ -44,6 +44,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Compiled directories
+client/build/
+
 # TypeScript v1 declaration files
 typings/
 
