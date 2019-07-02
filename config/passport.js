@@ -1,8 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
-// const db = require('../models');
 const bcs = require('../services/bcsService');
+const dummyUsers = require('../tests/dummyUsers.json');
 
 // Telling passport we want to use a Local Strategy.
 // In other words, we want login with a username/email and password
@@ -12,6 +11,14 @@ passport.use(new LocalStrategy(
     usernameField: 'email',
   },
   async (email, password, done) => {
+    // Testing dummy account validation
+    if (process.env.NODE_ENV !== 'production') {
+      const user = dummyUsers.users.find(u => u.userAccount.email === email);
+      if (user) {
+        return done(null, user);
+      }
+    }
+
     // When a user tries to sign in this code runs
     const auth = await bcs.login(email, password);
 

@@ -3,7 +3,7 @@ const db = require('../models');
 const STUDENT_ROLE_ID = 2;
 
 // Filter all enrollments based on student role, if any non-student role found assume admin
-const isAdmin = enrollments => enrollments.filter(enrollment => enrollment.courseRole.id !== STUDENT_ROLE_ID).length !== 0;
+const isAdmin = enrollments => enrollments.filter(enrollment => enrollment.courseRoleId !== STUDENT_ROLE_ID).length !== 0;
 
 const formatUser = async (req, res, next) => {
   const { userAccount: account, enrollments } = req.user;

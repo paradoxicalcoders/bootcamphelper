@@ -1,0 +1,180 @@
+{
+  "users": [
+    {
+      "userAccount": {
+        "id": 1,
+        "email": "active_mw_1@bcs.com",
+        "firstName": "Active MW 1",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 169193,
+          "courseRoleId": 2,
+          "course": {
+            "id": 967,
+            "cohortId": 689,
+            "startDate": "2019-02-11T06:00:00Z",
+            "endDate": "2019-08-03T05:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 2,
+        "email": "active_mw_2@bcs.com",
+        "firstName": "Active MW 2",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 169193,
+          "courseRoleId": 2,
+          "course": {
+            "id": 967,
+            "cohortId": 689,
+            "startDate": "2019-02-11T06:00:00Z",
+            "endDate": "2019-08-03T05:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 3,
+        "email": "active_th_1@bcs.com",
+        "firstName": "Active TH 1",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 169192,
+          "courseRoleId": 2,
+          "course": {
+            "id": 968,
+            "cohortId": 689,
+            "startDate": "2019-02-12T06:00:00Z",
+            "endDate": "2019-08-03T05:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 4,
+        "email": "active_th_2@bcs.com",
+        "firstName": "Active TH 2",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 169192,
+          "courseRoleId": 2,
+          "course": {
+            "id": 968,
+            "cohortId": 689,
+            "startDate": "2019-02-12T06:00:00Z",
+            "endDate": "2019-08-03T05:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 5,
+        "email": "inactive_mw_1@bcs.com",
+        "firstName": "Inactive MW 1",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 33686,
+          "courseRoleId": 2,
+          "course": {
+            "id": 624,
+            "cohortId": 492,
+            "startDate": "2018-07-30T05:00:00Z",
+            "endDate": "2019-02-02T06:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 6,
+        "email": "inactive_mw_2@bcs.com",
+        "firstName": "Inactive MW 2",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 33686,
+          "courseRoleId": 2,
+          "course": {
+            "id": 624,
+            "cohortId": 492,
+            "startDate": "2018-07-30T05:00:00Z",
+            "endDate": "2019-02-02T06:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 7,
+        "email": "inactive_th_1@bcs.com",
+        "firstName": "Inactive TH 1",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 33687,
+          "courseRoleId": 2,
+          "course": {
+            "id": 635,
+            "cohortId": 492,
+            "startDate": "2018-07-31T05:00:00Z",
+            "endDate": "2019-02-02T06:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "userAccount": {
+        "id": 8,
+        "email": "inactive_th_2@bcs.com",
+        "firstName": "Inactive TH 2",
+        "lastName": "Dummy",
+        "githubUsername": "",
+        "authToken": "123abc"
+      },
+      "enrollments": [
+        {
+          "id": 33687,
+          "courseRoleId": 2,
+          "course": {
+            "id": 635,
+            "cohortId": 492,
+            "startDate": "2018-07-31T05:00:00Z",
+            "endDate": "2019-02-02T06:00:00Z"
+          }
+        }
+      ]
+    }
+  ]
+}
