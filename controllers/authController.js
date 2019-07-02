@@ -21,6 +21,14 @@ const formatUser = async (req, res, next) => {
       cohortId: e.course.cohortId,
       startDate: e.course.startDate,
       endDate: e.course.endDate,
+      programName: e.course.cohort.program.name,
+      programType: e.course.cohort.program.programType.name,
+      universityName: e.course.cohort.program.university.name,
+      universityLogo: e.course.cohort.program.university.logoUrl,
+      maxAbsences: e.course.graduationRequirements.maxAbsence,
+      maxRemotes: e.course.graduationRequirements.maxRemoteAttendance,
+      maxMissedGeneral: e.course.graduationRequirements.maxMissedGeneralAssignment,
+      maxMissedRequired: e.course.graduationRequirements.maxMissedRequiredAssignment,
     })),
   };
 
