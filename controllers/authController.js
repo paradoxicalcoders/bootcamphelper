@@ -3,7 +3,7 @@ const db = require('../models');
 const STUDENT_ROLE_ID = 2;
 
 // Filter all enrollments based on student role, if any non-student role found assume admin
-const isAdmin = enrollments => enrollments.filter(enrollment => enrollment.courseRole.id !== STUDENT_ROLE_ID).length !== 0;
+const isAdmin = enrollments => enrollments.filter(enrollment => enrollment.courseRoleId !== STUDENT_ROLE_ID).length !== 0;
 
 const formatUser = async (req, res, next) => {
   const { userAccount: account, enrollments } = req.user;
@@ -21,6 +21,14 @@ const formatUser = async (req, res, next) => {
       cohortId: e.course.cohortId,
       startDate: e.course.startDate,
       endDate: e.course.endDate,
+      programName: e.course.cohort.program.name,
+      programType: e.course.cohort.program.programType.name,
+      universityName: e.course.cohort.program.university.name,
+      universityLogo: e.course.cohort.program.university.logoUrl,
+      maxAbsences: e.course.graduationRequirements.maxAbsence,
+      maxRemotes: e.course.graduationRequirements.maxRemoteAttendance,
+      maxMissedGeneral: e.course.graduationRequirements.maxMissedGeneralAssignment,
+      maxMissedRequired: e.course.graduationRequirements.maxMissedRequiredAssignment,
     })),
   };
 

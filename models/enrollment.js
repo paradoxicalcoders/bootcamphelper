@@ -7,8 +7,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     courseId: DataTypes.INTEGER,
     cohortId: DataTypes.INTEGER,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
+    startDate: DataTypes.DATEONLY,
+    endDate: DataTypes.DATEONLY,
+    programName: DataTypes.STRING,
+    programType: DataTypes.STRING,
+    universityName: DataTypes.STRING,
+    universityLogo: DataTypes.STRING,
+    maxAbsences: DataTypes.INTEGER,
+    maxRemotes: DataTypes.INTEGER,
+    maxMissedGeneral: DataTypes.INTEGER,
+    maxMissedRequired: DataTypes.INTEGER,
   }, {});
 
   Enrollment.associate = (models) => {

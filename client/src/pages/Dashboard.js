@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import io from 'socket.io-client';
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
 import AdminDashboard from 'components/AdminDashboard';
+import DialogModal from 'components/DialogModal';
 import Enrollments from 'components/Enrollments';
 
 class Dashboard extends Component {
@@ -11,10 +13,19 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       authenticated: true,
+      modalOpen: false,
+      question: null,
+      socket: null,
+      socketUrl: (process.env.NODE_ENV === 'production' ? "http://kubootcamphelper.herokuapp.com" : "http://localhost:3001"),
       userAccount: {},
     };
 
     this.onSignOut = this.onSignOut.bind(this);
+    this.modalClose = this.modalClose.bind(this);
+  }
+
+  componentWillMount() {
+    this.initSocket();
   }
 
   componentDidMount() {
@@ -24,7 +35,30 @@ class Dashboard extends Component {
       userAccount,
       authenticated,
     });
+    
+    console.log(this.state.userAccount, 'USER ACCOUNT');
+    this.emitUser(userAccount);
+    this.receiveQuestion();
   }
+
+  initSocket = () => {
+    const socket = io(this.state.socketUrl)
+    this.setState({ socket })
+  }
+  
+  emitUser = (userAccount) => {
+    const { socket } = this.state;
+    socket.emit('SEND_USER_INFO', userAccount)
+  }
+ 
+   receiveQuestion = () => {
+     const { socket } = this.state;
+     socket.on('GET_QUESTION', (question) => {
+      //  const { question } = questionObject.question;
+      //  console.log(questionObject, '-'.repeat(50))
+       this.setState({question, modalOpen: true})
+     })
+   }
 
   render() {
     console.log(this.state.userAccount);
@@ -38,7 +72,7 @@ class Dashboard extends Component {
           <Toolbar>
             <Typography variant="h6" color="inherit" style={{ flexGrow: 1 }}>
               Helper
-            </Typography>
+          </Typography>
             {this.renderGravatar()}
             <Button
               color="inherit"
@@ -53,14 +87,28 @@ class Dashboard extends Component {
           { this.renderDashboards()}
           </Box>
         </Container>
+      <DialogModal 
+        maxWidth={'sm'} 
+        disableBackdropClick={true} 
+        disableEscapeKeyDown={true} 
+        fullWidth={true} 
+        open={this.state.modalOpen} 
+        onClose={this.modalClose}
+        question={this.state.question} />
       </Box>
     );
+  }
+
+  modalClose(bool, val) {
+    const { socket } = this.state;
+    this.setState({modalOpen: bool})
+    socket.emit('SEND_RESPONSE', val)
   }
 
   renderDashboards() {
     if (this.state.userAccount && this.state.userAccount.isAdmin) {
       return (
-        <AdminDashboard enrollments={this.state.userAccount.enrollments} />
+        <AdminDashboard enrollments={this.state.userAccount.enrollments} socket={this.state.socket} />
       )
     }
     return this.renderEnrollments();
@@ -69,7 +117,7 @@ class Dashboard extends Component {
   renderEnrollments() {
     if (this.state.userAccount.enrollments) {
       return (
-        <Enrollments enrollments={this.state.userAccount.enrollments} />
+        <Enrollments enrollments={this.state.userAccount.enrollments} openModal={this.openModal}/>
       )
     }
   }
