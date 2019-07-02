@@ -22,6 +22,7 @@ class AdminEnrollments extends Component {
       selectAll: false,
       question: '',
       questionCreated: null,
+      questionTitle: null,
       responses: [],
       responseCount: 0,
       snackbarVariant: 'warning',
@@ -109,11 +110,14 @@ class AdminEnrollments extends Component {
         </Box>
 
         {this.state.questionCreated ? (
-          <div>
-            <h2>{this.state.question}</h2>
-            <p>Response Count: {this.state.responseCount}</p>
-            <p>Average: {this.average()}</p>
-          </div>
+        <Box mt={5}>
+          <Paper mt={4}>
+            <Box py={5} px={10} align={"center"}>
+              <h2>{this.state.questionTitle}</h2>
+              <p>Response Count: {this.state.responseCount} <b>|</b> Average: {this.average()}</p>
+            </Box>
+          </Paper>
+        </Box>
         ) : false}
 
         <Snackbar
@@ -178,15 +182,18 @@ class AdminEnrollments extends Component {
 
     try {
       const { socket } = this.props;
+      const { selectedClasses } = this.state;
       const response = await axios.post('/api/v1/questions', {
         question: this.state.question,
         enrollments: this.state.selectedClasses,
       });
       console.log(response.data);
-      const { question, id } = response.data;
-      socket.emit('SEND_QUESTION', { question, id });
+      const { question } = response.data;
+
+      socket.emit('SEND_QUESTION', { question, selectedClasses });
       this.setState({
         questionCreated: true,
+        questionTitle: question,
         isLoading: false,
         snackbarMessage: 'New question created!',
         snackbarVariant: 'success',

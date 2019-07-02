@@ -3,7 +3,6 @@ const helmet = require('helmet');
 const cors = require('cors');
 const session = require('express-session');
 const socketIo = require('socket.io');
-const { socketManager } = require('./services/socketManager');
 
 const db = require('./models');
 const routes = require('./routes');
@@ -43,12 +42,15 @@ db.sequelize
   .authenticate()
   .then(() => {
     db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
-      const io = socketIo(server);
-      io.on('connection', socketManager);
-      console.log(`🌎 ==> API server now on port ${PORT}!`);
+      console.log(`🌎 ==> API server now on port ${PORT}!`); // eslint-disable-line no-console
       app.emit('appStarted');
     });
   })
   .catch(console.error); // eslint-disable-line no-console
 
-module.exports = app;
+const io = socketIo(server);
+module.exports = { app, io };
+
+const { socketManager } = require('./services/socketManager');
+
+io.on('connection', socketManager);
