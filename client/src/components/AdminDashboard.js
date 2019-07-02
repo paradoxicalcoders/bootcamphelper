@@ -13,7 +13,7 @@ class AdminDashboard extends Component {
     return (
       <Box>
         <h1>Admin Dashboard</h1>
-        <AdminEnrollments enrollments={this.props.enrollments} />
+        <AdminEnrollments enrollments={this.props.enrollments} socket={this.props.socket} />
       </Box>
     );
   }
