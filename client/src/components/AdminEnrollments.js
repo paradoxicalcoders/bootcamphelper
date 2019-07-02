@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -9,9 +10,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
 
 import AdminEnrollmentItem from './AdminEnrollmentItem';
+import Snackbar from './Snackbar';
 
 class AdminEnrollments extends Component {
   constructor(props) {
@@ -21,21 +22,24 @@ class AdminEnrollments extends Component {
       selectAll: false,
       question: '',
       questionCreated: null,
+      questionTitle: null,
       responses: [],
       responseCount: 0,
+      snackbarVariant: 'warning',
+      snackbarMessage: '',
     };
 
     this.toggleSelectAll = this.toggleSelectAll.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.closeSnackbar = this.closeSnackbar.bind(this);
   }
-  
+
   componentDidMount() {
     this.addResponse();
   }
-  
+
   render() {
     return (
       <Box>
@@ -53,6 +57,7 @@ class AdminEnrollments extends Component {
                 <TableCell>ID</TableCell>
                 <TableCell>Program Type</TableCell>
                 <TableCell>Course Name</TableCell>
+                <TableCell>Day of Week</TableCell>
                 <TableCell>Start Date</TableCell>
                 <TableCell>End Date</TableCell>
               </TableRow>
@@ -60,10 +65,10 @@ class AdminEnrollments extends Component {
             <TableBody>
               {this.props.enrollments.map(enrollment => (
                 <AdminEnrollmentItem
+                  key={enrollment.id}
                   enrollment={enrollment}
                   isSelected={this.state.selectedClasses.indexOf(enrollment.id) !== -1}
                   onClick={this.onClassSelect}
-                  key={enrollment.id}
                 />))
               }
             </TableBody>
@@ -94,6 +99,7 @@ class AdminEnrollments extends Component {
                     fullWidth
                     variant="contained"
                     color="primary"
+                    disabled={!(this.state.question && this.state.selectedClasses.length > 0)}
                   >
                     Submit Question
                   </Button>
@@ -104,18 +110,28 @@ class AdminEnrollments extends Component {
         </Box>
 
         {this.state.questionCreated ? (
-          <div>
-            <h2>{this.state.question}</h2>
-            <p>Response Count: {this.state.responseCount}</p>
-            <p>Average: {this.average()}</p>
-          </div>
+        <Box mt={5}>
+          <Paper mt={4}>
+            <Box py={5} px={10} align={"center"}>
+              <h2>{this.state.questionTitle}</h2>
+              <p>Response Count: {this.state.responseCount} <b>|</b> Average: {this.average()}</p>
+            </Box>
+          </Paper>
+        </Box>
         ) : false}
+
+        <Snackbar
+          open={!!this.state.snackbarMessage}
+          onClose={this.closeSnackbar}
+          message={this.state.snackbarMessage}
+          variant={this.state.snackbarVariant}
+        />
       </Box>
     );
   }
 
   average() {
-    const {responses} = this.state;
+    const { responses } = this.state;
     if (responses.length) {
       let sum = responses.reduce((previous, current) => current += previous);
       let avg = sum / responses.length;
@@ -135,7 +151,7 @@ class AdminEnrollments extends Component {
         return enrollment.id;
       });
     }
-    
+
     this.setState({
       selectedClasses,
     }, () => console.log(this.state.selectedClasses))
@@ -164,20 +180,39 @@ class AdminEnrollments extends Component {
   async handleSubmit(event) {
     event.preventDefault();
 
-    console.log(this.state.question);
     try {
       const { socket } = this.props;
+      const { selectedClasses } = this.state;
       const response = await axios.post('/api/v1/questions', {
         question: this.state.question,
         enrollments: this.state.selectedClasses,
       });
       console.log(response.data);
-      const { question, id } = response.data;
-      socket.emit('SEND_QUESTION', { question, id });
-      this.setState({questionCreated: true})
+      const { question } = response.data;
+
+      socket.emit('SEND_QUESTION', { question, selectedClasses });
+      this.setState({
+        questionCreated: true,
+        questionTitle: question,
+        isLoading: false,
+        snackbarMessage: 'New question created!',
+        snackbarVariant: 'success',
+        question: '',
+      });
     } catch (err) {
       console.log(err);
+      this.setState({
+        isLoading: false,
+        snackbarMessage: err.toString(),
+        snackbarVariant: 'error',
+      });
     }
+  }
+
+  closeSnackbar() {
+    this.setState({
+      snackbarMessage: '',
+    })
   }
 
   addResponse() {

@@ -16,8 +16,9 @@ before_script:
     - mysql -uroot < tests/travis.sql
 
 script:
+  - yarn lint:fix
   - yarn lint
-  - yarn test
+  - yarn tests
   - yarn test:coverage
 
 notifications:

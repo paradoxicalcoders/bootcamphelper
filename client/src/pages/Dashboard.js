@@ -36,6 +36,8 @@ class Dashboard extends Component {
       authenticated,
     });
     
+    console.log(this.state.userAccount, 'USER ACCOUNT');
+    this.emitUser(userAccount);
     this.receiveQuestion();
   }
 
@@ -43,12 +45,16 @@ class Dashboard extends Component {
     const socket = io(this.state.socketUrl)
     this.setState({ socket })
   }
+  
+  emitUser = (userAccount) => {
+    const { socket } = this.state;
+    socket.emit('SEND_USER_INFO', userAccount)
+  }
  
    receiveQuestion = () => {
      const { socket } = this.state;
-     socket.on('GET_QUESTION', (questionObject) => {
-       const { question, id } = questionObject.question;
-       console.log(question, ' - ', id, '-'.repeat(50))
+     socket.on('GET_QUESTION', (question) => {
+      //  const { question } = questionObject.question;
       //  console.log(questionObject, '-'.repeat(50))
        this.setState({question, modalOpen: true})
      })
