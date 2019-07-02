@@ -39,17 +39,18 @@ const FORCE_SCHEMA = process.env.NODE_ENV === 'test';
 
 
 db.sequelize
-.authenticate()
-.then(() => {
-  db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
-    console.log(`🌎 ==> API server now on port ${PORT}!`);
-    app.emit('appStarted');
-  });
-})
-.catch(console.error); // eslint-disable-line no-console
+  .authenticate()
+  .then(() => {
+    db.sequelize.sync({ force: FORCE_SCHEMA }).then(() => {
+      console.log(`🌎 ==> API server now on port ${PORT}!`);
+      app.emit('appStarted');
+    });
+  })
+  .catch(console.error); // eslint-disable-line no-console
 
 const io = socketIo(server);
-module.exports = {app, io};
+module.exports = { app, io };
 
 const { socketManager } = require('./services/socketManager');
+
 io.on('connection', socketManager);
