@@ -17,7 +17,25 @@
             "id": 967,
             "cohortId": 689,
             "startDate": "2019-02-11T06:00:00Z",
-            "endDate": "2019-08-03T05:00:00Z"
+            "endDate": "2019-08-03T05:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -39,7 +57,25 @@
             "id": 967,
             "cohortId": 689,
             "startDate": "2019-02-11T06:00:00Z",
-            "endDate": "2019-08-03T05:00:00Z"
+            "endDate": "2019-08-03T05:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -61,7 +97,25 @@
             "id": 968,
             "cohortId": 689,
             "startDate": "2019-02-12T06:00:00Z",
-            "endDate": "2019-08-03T05:00:00Z"
+            "endDate": "2019-08-03T05:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -83,7 +137,25 @@
             "id": 968,
             "cohortId": 689,
             "startDate": "2019-02-12T06:00:00Z",
-            "endDate": "2019-08-03T05:00:00Z"
+            "endDate": "2019-08-03T05:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -105,7 +177,25 @@
             "id": 624,
             "cohortId": 492,
             "startDate": "2018-07-30T05:00:00Z",
-            "endDate": "2019-02-02T06:00:00Z"
+            "endDate": "2019-02-02T06:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -127,7 +217,25 @@
             "id": 624,
             "cohortId": 492,
             "startDate": "2018-07-30T05:00:00Z",
-            "endDate": "2019-02-02T06:00:00Z"
+            "endDate": "2019-02-02T06:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -149,7 +257,25 @@
             "id": 635,
             "cohortId": 492,
             "startDate": "2018-07-31T05:00:00Z",
-            "endDate": "2019-02-02T06:00:00Z"
+            "endDate": "2019-02-02T06:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]
@@ -171,7 +297,25 @@
             "id": 635,
             "cohortId": 492,
             "startDate": "2018-07-31T05:00:00Z",
-            "endDate": "2019-02-02T06:00:00Z"
+            "endDate": "2019-02-02T06:00:00Z",
+            "cohort": {
+              "program": {
+                "name": "KU Coding Boot Camp - Edwards Campus",
+                "university": {
+                  "name": "University of Kansas",
+                  "logoUrl": "https://trilogyed--c.na35.content.force.com/servlet/servlet.ImageServer?id=01541000003WWRa&oid=00D410000006puJ&lastMod=1527718894000"
+                },
+                "programType": {
+                  "name": "Full Stack Flex Part-Time"
+                }
+              }
+            },
+            "graduationRequirements": {
+              "maxAbsence": 4,
+              "maxRemoteAttendance": 4,
+              "maxMissedGeneralAssignment": 2,
+              "maxMissedRequiredAssignment": 0
+            }
           }
         }
       ]

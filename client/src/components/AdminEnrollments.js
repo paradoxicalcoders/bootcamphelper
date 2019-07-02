@@ -35,11 +35,11 @@ class AdminEnrollments extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.closeSnackbar = this.closeSnackbar.bind(this);
   }
-  
+
   componentDidMount() {
     this.addResponse();
   }
-  
+
   render() {
     return (
       <Box>
@@ -57,6 +57,7 @@ class AdminEnrollments extends Component {
                 <TableCell>ID</TableCell>
                 <TableCell>Program Type</TableCell>
                 <TableCell>Course Name</TableCell>
+                <TableCell>Day of Week</TableCell>
                 <TableCell>Start Date</TableCell>
                 <TableCell>End Date</TableCell>
               </TableRow>
@@ -64,10 +65,10 @@ class AdminEnrollments extends Component {
             <TableBody>
               {this.props.enrollments.map(enrollment => (
                 <AdminEnrollmentItem
+                  key={enrollment.id}
                   enrollment={enrollment}
                   isSelected={this.state.selectedClasses.indexOf(enrollment.id) !== -1}
                   onClick={this.onClassSelect}
-                  key={enrollment.id}
                 />))
               }
             </TableBody>
@@ -130,7 +131,7 @@ class AdminEnrollments extends Component {
   }
 
   average() {
-    const {responses} = this.state;
+    const { responses } = this.state;
     if (responses.length) {
       let sum = responses.reduce((previous, current) => current += previous);
       let avg = sum / responses.length;
@@ -150,7 +151,7 @@ class AdminEnrollments extends Component {
         return enrollment.id;
       });
     }
-    
+
     this.setState({
       selectedClasses,
     }, () => console.log(this.state.selectedClasses))
