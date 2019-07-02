@@ -182,13 +182,15 @@ class AdminEnrollments extends Component {
 
     try {
       const { socket } = this.props;
+      const { selectedClasses } = this.state;
       const response = await axios.post('/api/v1/questions', {
         question: this.state.question,
         enrollments: this.state.selectedClasses,
       });
       console.log(response.data);
-      const { question, id } = response.data;
-      socket.emit('SEND_QUESTION', { question, id });
+      const { question } = response.data;
+
+      socket.emit('SEND_QUESTION', { question, selectedClasses });
       this.setState({
         questionCreated: true,
         questionTitle: question,

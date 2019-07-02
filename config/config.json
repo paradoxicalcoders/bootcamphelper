@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "tester",
-    "password": "testing",
+    "username": "root",
+    "password": null,
     "database": "bootcamphelper",
     "host": "127.0.0.1",
     "dialect": "mysql",
