@@ -1,11 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-  const Enrollment = sequelize.define('Enrollment', {
+  const Course = sequelize.define('Course', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: false,
     },
-    courseId: DataTypes.INTEGER,
     cohortId: DataTypes.INTEGER,
     startDate: DataTypes.DATEONLY,
     endDate: DataTypes.DATEONLY,
@@ -19,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     maxMissedRequired: DataTypes.INTEGER,
   }, {});
 
-  Enrollment.associate = (models) => {
-    models.Enrollment.belongsToMany(models.Question, { through: 'enrollment_questions' });
-    models.Enrollment.belongsToMany(models.User, { through: 'user_enrollments' });
+  Course.associate = (models) => {
+    models.Course.belongsToMany(models.Question, { through: 'course_questions' });
+    models.Course.belongsToMany(models.User, { through: 'user_courses' });
   };
 
-  return Enrollment;
+  return Course;
 };

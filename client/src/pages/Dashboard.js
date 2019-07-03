@@ -35,7 +35,7 @@ class Dashboard extends Component {
       userAccount,
       authenticated,
     });
-    
+
     console.log(this.state.userAccount, 'USER ACCOUNT');
     this.emitUser(userAccount);
     this.receiveQuestion();
@@ -45,20 +45,20 @@ class Dashboard extends Component {
     const socket = io(this.state.socketUrl)
     this.setState({ socket })
   }
-  
+
   emitUser = (userAccount) => {
     const { socket } = this.state;
     socket.emit('SEND_USER_INFO', userAccount)
   }
- 
-   receiveQuestion = () => {
-     const { socket } = this.state;
-     socket.on('GET_QUESTION', (question) => {
+
+  receiveQuestion = () => {
+    const { socket } = this.state;
+    socket.on('GET_QUESTION', (question) => {
       //  const { question } = questionObject.question;
       //  console.log(questionObject, '-'.repeat(50))
-       this.setState({question, modalOpen: true})
-     })
-   }
+      this.setState({ question, modalOpen: true })
+    })
+  }
 
   render() {
     console.log(this.state.userAccount);
@@ -84,40 +84,40 @@ class Dashboard extends Component {
         </AppBar>
         <Container>
           <Box pt={10}>
-          { this.renderDashboards()}
+            {this.renderDashboards()}
           </Box>
         </Container>
-      <DialogModal 
-        maxWidth={'sm'} 
-        disableBackdropClick={true} 
-        disableEscapeKeyDown={true} 
-        fullWidth={true} 
-        open={this.state.modalOpen} 
-        onClose={this.modalClose}
-        question={this.state.question} />
+        <DialogModal
+          maxWidth={'sm'}
+          disableBackdropClick={true}
+          disableEscapeKeyDown={true}
+          fullWidth={true}
+          open={this.state.modalOpen}
+          onClose={this.modalClose}
+          question={this.state.question} />
       </Box>
     );
   }
 
   modalClose(bool, val) {
     const { socket } = this.state;
-    this.setState({modalOpen: bool})
+    this.setState({ modalOpen: bool })
     socket.emit('SEND_RESPONSE', val)
   }
 
   renderDashboards() {
     if (this.state.userAccount && this.state.userAccount.isAdmin) {
       return (
-        <AdminDashboard enrollments={this.state.userAccount.enrollments} socket={this.state.socket} />
+        <AdminDashboard courses={this.state.userAccount.courses} socket={this.state.socket} />
       )
     }
-    return this.renderEnrollments();
+    return this.renderCourses();
   }
 
-  renderEnrollments() {
-    if (this.state.userAccount.enrollments) {
+  renderCourses() {
+    if (this.state.userAccount.courses) {
       return (
-        <Enrollments enrollments={this.state.userAccount.enrollments} openModal={this.openModal}/>
+        <Enrollments courses={this.state.userAccount.courses} openModal={this.openModal} />
       )
     }
   }

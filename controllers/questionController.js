@@ -3,8 +3,8 @@ const db = require('../models');
 
 const create = async (req, res) => {
   try {
-    const question = await db.Question.create(req.body, { include: [db.Enrollment] });
-    await question.addEnrollments(req.body.enrollments);
+    const question = await db.Question.create(req.body, { include: [db.Course] });
+    await question.addCourses(req.body.courses);
     res.json(question);
   } catch (error) {
     res.status(500).send(error);
@@ -15,7 +15,7 @@ const readAll = async (req, res) => {
   try {
     res.json(await db.Question.findAll({
       include: [{
-        model: db.Enrollment,
+        model: db.Course,
         // attributes: ['id'],
         through: {
           attributes: [],
@@ -33,7 +33,7 @@ const filter = (req, res, next) => {
       id: req.params.id,
     },
     include: [{
-      model: db.Enrollment,
+      model: db.Course,
       through: {
         attributes: [],
       },

@@ -11,10 +11,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 
-import AdminEnrollmentItem from './AdminEnrollmentItem';
+import AdminCourseItem from './AdminCourseItem';
 import Snackbar from './Snackbar';
 
-class AdminEnrollments extends Component {
+class AdminCourses extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +49,7 @@ class AdminEnrollments extends Component {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={this.props.enrollments.length === this.state.selectedClasses.length}
+                    checked={this.props.courses.length === this.state.selectedClasses.length}
                     onChange={this.toggleSelectAll}
                     value={this.state.selectAll}
                   />
@@ -63,11 +63,11 @@ class AdminEnrollments extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.props.enrollments.map(enrollment => (
-                <AdminEnrollmentItem
-                  key={enrollment.id}
-                  enrollment={enrollment}
-                  isSelected={this.state.selectedClasses.indexOf(enrollment.id) !== -1}
+              {this.props.courses.map(course => (
+                <AdminCourseItem
+                  key={course.id}
+                  course={course}
+                  isSelected={this.state.selectedClasses.indexOf(course.id) !== -1}
                   onClick={this.onClassSelect}
                 />))
               }
@@ -110,14 +110,14 @@ class AdminEnrollments extends Component {
         </Box>
 
         {this.state.questionCreated ? (
-        <Box mt={5}>
-          <Paper mt={4}>
-            <Box py={5} px={10} align={"center"}>
-              <h2>{this.state.questionTitle}</h2>
-              <p>Response Count: {this.state.responseCount} <b>|</b> Average: {this.average()}</p>
-            </Box>
-          </Paper>
-        </Box>
+          <Box mt={5}>
+            <Paper mt={4}>
+              <Box py={5} px={10} align={"center"}>
+                <h2>{this.state.questionTitle}</h2>
+                <p>Response Count: {this.state.responseCount} <b>|</b> Average: {this.average()}</p>
+              </Box>
+            </Paper>
+          </Box>
         ) : false}
 
         <Snackbar
@@ -228,4 +228,4 @@ class AdminEnrollments extends Component {
   }
 }
 
-export default AdminEnrollments;
+export default AdminCourses;

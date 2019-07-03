@@ -4,8 +4,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-
-class AdminEnrollmentItem extends Component {
+class AdminCouseItem extends Component {
   render() {
     const {
       id,
@@ -13,7 +12,7 @@ class AdminEnrollmentItem extends Component {
       programName,
       startDate,
       endDate,
-    } = this.props.enrollment;
+    } = this.props.course;
 
     const {
       isSelected,
@@ -44,4 +43,4 @@ class AdminEnrollmentItem extends Component {
   }
 }
 
-export default AdminEnrollmentItem;
+export default AdminCouseItem;

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   Question.associate = (models) => {
     // associations can be defined here
     models.Question.hasMany(models.Response);
-    models.Question.belongsToMany(models.Enrollment, { through: 'enrollment_questions' });
+    models.Question.belongsToMany(models.Course, { through: 'course_questions' });
   };
 
   return Question;
