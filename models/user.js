@@ -9,13 +9,14 @@ module.exports = (sequelize, DataTypes) => {
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,
     githubUsername: DataTypes.STRING,
+    gravatarEmail: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN,
     authToken: DataTypes.STRING,
   }, {});
 
   User.associate = (models) => {
     models.User.hasMany(models.Response);
-    models.User.belongsToMany(models.Enrollment, { through: 'user_enrollments' });
+    models.User.belongsToMany(models.Course, { through: 'user_courses' });
   };
 
   return User;
