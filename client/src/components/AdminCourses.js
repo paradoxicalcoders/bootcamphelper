@@ -37,6 +37,7 @@ class AdminCourses extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props, 'admin props');
     this.addResponse();
   }
 
@@ -147,8 +148,8 @@ class AdminCourses extends Component {
     if (!checked) {
       selectedClasses = [];
     } else {
-      selectedClasses = this.props.enrollments.map((enrollment) => {
-        return enrollment.id;
+      selectedClasses = this.props.courses.map((course) => {
+        return course.id;
       });
     }
 
