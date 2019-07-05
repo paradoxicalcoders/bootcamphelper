@@ -38,7 +38,7 @@ class AdminCourses extends Component {
 
   componentDidMount() {
     console.log(this.props, 'admin props');
-    this.addResponse();
+    // this.addResponse();
   }
 
   render() {

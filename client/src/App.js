@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import io from 'socket.io-client';
 
 import DefaultLayout from 'layouts/DefaultLayout';
 import AuthenticatedLayout from 'layouts/AuthenticatedLayout';
@@ -18,6 +19,15 @@ class App extends Component {
 
     this.onSignIn = this.onSignIn.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
+  }
+
+  componentWillMount() {
+    this.initSocket();
+  }
+
+  initSocket = () => {
+    const socket = io(this.state.socketUrl)
+    this.setState({ socket })
   }
 
   onSignIn(userAccount) {

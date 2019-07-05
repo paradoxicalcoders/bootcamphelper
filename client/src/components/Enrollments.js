@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-const printJson = obj => JSON.stringify(obj, null, 2);
+// const printJson = obj => JSON.stringify(obj, null, 2);
 
 const EnrollmentItem = ({
   id,
@@ -66,9 +66,9 @@ const Enrollments = ({
           </TableBody>
         </Table>
       </Paper>
-      <Paper>
+      {/* <Paper>
         <pre>{printJson(enrollments)}</pre>
-      </Paper>
+      </Paper> */}
     </Box>
   );
 

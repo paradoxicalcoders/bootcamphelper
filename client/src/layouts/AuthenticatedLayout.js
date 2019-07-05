@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
-import io from 'socket.io-client';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DialogModal from 'components/DialogModal';
@@ -23,35 +22,24 @@ class AuthenticatedLayout extends Component {
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.modalClose = this.modalClose.bind(this);
   }
+  
+  // componentWillMount() {
+  //   console.log(this.props.userAccount, 'USER_ACCOUNT');
+  //   this.emitUser(this.props.userAccount);
+  //   this.receiveQuestion();
+  // }
 
-  componentWillMount() {
-    this.initSocket();
-  }
+  // emitUser = (userAccount) => {
+  //   const { socket } = this.props;
+  //   socket.emit('SEND_USER_INFO', userAccount)
+  // }
 
-  componentDidMount() {
-    console.log(this.props.userAccount, 'USER_ACCOUNT');
-    this.emitUser(this.props.userAccount);
-    this.receiveQuestion();
-  }
-
-  initSocket = () => {
-    const socket = io(this.state.socketUrl)
-    this.setState({ socket })
-  }
-
-  emitUser = (userAccount) => {
-    const { socket } = this.state;
-    socket.emit('SEND_USER_INFO', userAccount)
-  }
-
-  receiveQuestion = () => {
-    const { socket } = this.state;
-    socket.on('GET_QUESTION', (question) => {
-      //  const { question } = questionObject.question;
-      //  console.log(questionObject, '-'.repeat(50))
-      this.setState({ question, modalOpen: true })
-    })
-  }
+  // receiveQuestion = () => {
+  //   const { socket } = this.props;
+  //   socket.on('GET_QUESTION', (question) => {
+  //     this.setState({ question, modalOpen: true })
+  //   })
+  // }
 
   setMobileOpen(bool) {
     this.setState({
@@ -64,12 +52,13 @@ class AuthenticatedLayout extends Component {
   }
 
   modalClose(bool, val) {
-    const { socket } = this.state;
+    const { socket } = this.props;
     this.setState({ modalOpen: bool })
     socket.emit('SEND_RESPONSE', val)
   }
 
   render() {
+    // this.emitUser(this.props.userAccount);
     if (!this.props.authenticated) {
       return <Redirect to='/' />;
     }
@@ -95,7 +84,7 @@ class AuthenticatedLayout extends Component {
             mobileOpen={this.state.mobileOpen}
           />
           <main style={{flexGrow: 1, backgroundColor: '#efefef'}}>
-            <Component userAccount={userAccount} socket={this.state.socket} {...matchProps} />
+            <Component userAccount={userAccount} socket={this.props.socket} {...matchProps} />
           </main>
           <DialogModal
             maxWidth={'sm'}
