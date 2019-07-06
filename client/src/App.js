@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import DefaultLayout from 'layouts/DefaultLayout';
 import AuthenticatedLayout from 'layouts/AuthenticatedLayout';
@@ -66,9 +66,11 @@ class App extends Component {
 
     return (
       <Router>
-        <DefaultLayout exact path="/" component={LoginPage} onSignIn={this.onSignIn} authenticated={this.state.authenticated} />
-        <AuthenticatedLayout exact path='/dashboard' onSignOut={this.onSignOut} component={Dashboard} {...this.state} />
-        <AuthenticatedLayout exact path='/resources' onSignOut={this.onSignOut} component={Resources} {...this.state} />
+        <Switch>
+          <DefaultLayout exact path="/" component={LoginPage} onSignIn={this.onSignIn} authenticated={this.state.authenticated} />
+          <AuthenticatedLayout exact path='/dashboard' onSignOut={this.onSignOut} component={Dashboard} {...this.state} />
+          <AuthenticatedLayout exact path='/resources' onSignOut={this.onSignOut} component={Resources} {...this.state} />
+        </Switch>
       </Router>
     );
   }
