@@ -14,20 +14,46 @@ class App extends Component {
     this.state = {
       authenticated: false,
       userAccount: {},
+      sessionChecked: false,
     };
 
     this.onSignIn = this.onSignIn.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
   }
 
+  componentDidMount() {
+    this.checkSession();
+  }
+
+  checkSession() {
+    // If a page is refreshed and state is cleared, check session storage for a user.
+    console.log('checking session');
+    if (this.authenticated) {
+      return this.setState({
+        sessionChecked: true,
+      });
+    }
+
+    const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
+    const authenticated = userAccount && userAccount.email ? true : false;
+    this.setState({
+      authenticated,
+      userAccount,
+      sessionChecked: true,
+    });
+  }
+
   onSignIn(userAccount) {
+    window.sessionStorage.setItem('userAccount', JSON.stringify(userAccount));
     this.setState({
       authenticated: true,
       userAccount,
+      sessionChecked: true,
     });
   }
 
   onSignOut() {
+    window.sessionStorage.clear();
     this.setState({
       authenticated: false,
       userAccount: {},
@@ -35,6 +61,9 @@ class App extends Component {
   }
 
   render() {
+    if (!this.state.sessionChecked) return null;
+    console.log('rendering', this.state.userAccount);
+
     return (
       <Router>
         <DefaultLayout exact path="/" component={LoginPage} onSignIn={this.onSignIn} authenticated={this.state.authenticated} />
