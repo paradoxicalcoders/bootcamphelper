@@ -23,23 +23,23 @@ class AuthenticatedLayout extends Component {
     this.modalClose = this.modalClose.bind(this);
   }
   
-  // componentWillMount() {
-  //   console.log(this.props.userAccount, 'USER_ACCOUNT');
-  //   this.emitUser(this.props.userAccount);
-  //   this.receiveQuestion();
-  // }
+  componentWillMount() {
+    console.log(this.props.userAccount, 'USER_ACCOUNT');
+    this.emitUser(this.props.userAccount);
+    this.receiveQuestion();
+  }
 
-  // emitUser = (userAccount) => {
-  //   const { socket } = this.props;
-  //   socket.emit('SEND_USER_INFO', userAccount)
-  // }
+  emitUser = (userAccount) => {
+    const { socket } = this.props;
+    socket.emit('SEND_USER_INFO', userAccount)
+  }
 
-  // receiveQuestion = () => {
-  //   const { socket } = this.props;
-  //   socket.on('GET_QUESTION', (question) => {
-  //     this.setState({ question, modalOpen: true })
-  //   })
-  // }
+  receiveQuestion = () => {
+    const { socket } = this.props;
+    socket.on('GET_QUESTION', (question) => {
+      this.setState({ question, modalOpen: true })
+    })
+  }
 
   setMobileOpen(bool) {
     this.setState({
