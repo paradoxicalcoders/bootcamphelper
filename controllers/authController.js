@@ -15,20 +15,19 @@ const formatUser = async (req, res, next) => {
     githubUsername: account.githubUserName,
     isAdmin: isAdmin(enrollments),
     authToken: account.authToken,
-    enrollments: enrollments.map(e => ({
-      id: e.id,
-      courseId: e.course.id,
-      cohortId: e.course.cohortId,
-      startDate: e.course.startDate,
-      endDate: e.course.endDate,
-      programName: e.course.cohort.program.name,
-      programType: e.course.cohort.program.programType.name,
-      universityName: e.course.cohort.program.university.name,
-      universityLogo: e.course.cohort.program.university.logoUrl,
-      maxAbsences: e.course.graduationRequirements.maxAbsence,
-      maxRemotes: e.course.graduationRequirements.maxRemoteAttendance,
-      maxMissedGeneral: e.course.graduationRequirements.maxMissedGeneralAssignment,
-      maxMissedRequired: e.course.graduationRequirements.maxMissedRequiredAssignment,
+    courses: enrollments.map(({ course }) => ({
+      id: course.id,
+      cohortId: course.cohortId,
+      startDate: course.startDate,
+      endDate: course.endDate,
+      programName: course.cohort.program.name,
+      programType: course.cohort.program.programType.name,
+      universityName: course.cohort.program.university.name,
+      universityLogo: course.cohort.program.university.logoUrl,
+      maxAbsences: course.graduationRequirements.maxAbsence,
+      maxRemotes: course.graduationRequirements.maxRemoteAttendance,
+      maxMissedGeneral: course.graduationRequirements.maxMissedGeneralAssignment,
+      maxMissedRequired: course.graduationRequirements.maxMissedRequiredAssignment,
     })),
   };
 
@@ -54,26 +53,22 @@ const updateUser = async (req, res, next) => {
   next();
 };
 
-// Compare user enrollments against the local DB
-const compareEnrollments = async (req, res, next) => {
+// Compare user courses against the local DB
+const compareCourses = async (req, res, next) => {
   try {
     // fetch the dynamic table
-    const UserEnrollment = db.sequelize.model('user_enrollments');
+    const UserCourse = db.sequelize.model('user_courses');
 
-    // Check the associate count of enrollments for user
-    req.foundEnrollments = await UserEnrollment.findAll({
+    // Check the associate count of courses for user
+    req.foundCourses = await UserCourse.findAll({
       where: {
         user_id: req.user.id,
-        // FIXME: Shouldn't need this second WHERE clause
-        // enrollment_id: {
-        //   [db.Sequelize.Op.in]: req.user.enrollments.map(e => e.id),
-        // },
       },
     });
 
-    // compare DB record count against enrollments.length
+    // compare DB record count against courses.length
     // if the counts don't match, then records need updated
-    if (req.user.enrollments.length !== req.foundEnrollments.length) {
+    if (req.user.courses.length !== req.foundCourses.length) {
       next();
     }
   } catch (error) {
@@ -81,11 +76,11 @@ const compareEnrollments = async (req, res, next) => {
   }
 };
 
-// Find/Create all enrollments for user
-const updateEnrollments = async (req, res, next) => {
+// Find/Create all courses for user
+const updateCourses = async (req, res, next) => {
   try {
-    const enrollmentQueries = req.user.enrollments.map(e => db.Enrollment.findOrCreate({ where: { id: e.id }, defaults: e }));
-    req.Enrollments = await Promise.all(enrollmentQueries);
+    const courseQueries = req.user.courses.map(c => db.Course.findOrCreate({ where: { id: c.id }, defaults: c }));
+    req.Courses = await Promise.all(courseQueries);
     next();
   } catch (error) {
     throw new Error(error);
@@ -93,25 +88,25 @@ const updateEnrollments = async (req, res, next) => {
 };
 
 // Helper method to map to an objects id
-const toId = enrollment => enrollment.id;
+const toId = course => course.id;
 
-// Intersect the enrollment records against the
-const associateEnrollments = async (req) => {
-  let unmappedEnrollmentIds;
+// Intersect the course records against the
+const associateCourses = async (req) => {
+  let unmappedCourseIds;
 
-  if (req.foundEnrollments) {
-    // Determine which enrollments are mapped in through table
-    const mappedEnrollmentIds = req.foundEnrollments.map(toId);
-    unmappedEnrollmentIds = req.user.enrollments.filter(e => !mappedEnrollmentIds.includes(e.id)).map(toId);
+  if (req.foundCourses) {
+    // Determine which courses are mapped in through table
+    const mappedCourseIds = req.foundCourses.map(toId);
+    unmappedCourseIds = req.user.courses.filter(e => !mappedCourseIds.includes(e.id)).map(toId);
   } else {
-    unmappedEnrollmentIds = req.user.enrollments.map(toId);
+    unmappedCourseIds = req.user.courses.map(toId);
   }
 
   try {
-    await req.User.addEnrollments(unmappedEnrollmentIds);
+    await req.User.addCourses(unmappedCourseIds);
   } catch (error) {
     throw new Error(error);
   }
 };
 
-exports.login = [formatUser, updateUser, compareEnrollments, updateEnrollments, associateEnrollments];
+exports.login = [formatUser, updateUser, compareCourses, updateCourses, associateCourses];

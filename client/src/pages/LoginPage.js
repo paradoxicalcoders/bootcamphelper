@@ -21,9 +21,9 @@ class LoginPage extends Component {
     this.state = {
       email: '',
       password: '',
-      authenticated: false,
       isLoading: false,
       error: '',
+      loginSuccess: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -31,17 +31,8 @@ class LoginPage extends Component {
     this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
-  componentDidMount() {
-    const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
-    const enrollments = JSON.parse(window.sessionStorage.getItem('enrollments'));
-    const authenticated = userAccount && enrollments ? true : false;
-    this.setState({
-      authenticated,
-    });
-  }
-
   render() {
-    if (this.state.authenticated) {
+    if (this.state.loginSuccess) {
       return <Redirect to='/dashboard' />;
     }
 
@@ -138,11 +129,12 @@ class LoginPage extends Component {
         email: this.state.email,
         password: this.state.password,
       });
+      console.log(response.data);
       if (response.data && response.data.email) {
-        window.sessionStorage.setItem('userAccount', JSON.stringify(response.data));
+        this.props.onSignIn(response.data);
         return this.setState({
-          authenticated: true,
           isLoading: false,
+          loginSuccess: true,
         });
       }
       throw new Error('Houston, we have a problem');
