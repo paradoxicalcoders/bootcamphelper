@@ -66,7 +66,7 @@ class Resources extends Component {
           onSubmit={this.handleSubmit}
         >
           <TextField
-            id="outlined-adornment-password"
+            id="outlined-adornment-link"
             variant="outlined"
             type="text"
             label="URL"
