@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -10,18 +11,26 @@ import TextField from '@material-ui/core/TextField';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 
 import ContentWrapper from 'components/ContentWrapper';
+import Snackbar from 'components/Snackbar';
 
 class TagManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tagName: '',
+      newTagName: '',
       isLoading: false,
-      error: '',
+      tags: [],
+      snackbarVariant: 'warning',
+      snackbarMessage: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeSnackbar = this.closeSnackbar.bind(this);
+  }
+
+  componentDidMount() {
+    this.getTags();
   }
 
   render() {
@@ -29,36 +38,109 @@ class TagManager extends Component {
       <ContentWrapper>
         <h1>Tag Manager</h1>
         <Paper square>
-          <form onSubmit={this.handleSubmit}>
-            <TextField
-              id="outlined-adornment-tag"
-              variant="outlined"
-              type="text"
-              label="Tag"
-              value={this.state.url}
-              onChange={this.handleChange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                  <LabelImportantIcon color="primary" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Box mt={1}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={this.state.isLoading}
-              >
-                Add Tag
-              </Button>
-            </Box>
-          </form>
+          <Box display="flex" justifyContent="center" py={5}>
+            <form onSubmit={this.handleSubmit}>
+              <TextField
+                id="outlined-adornment-tag"
+                variant="outlined"
+                type="text"
+                label="Tag"
+                name="newTagName"
+                value={this.state.newTagName}
+                onChange={this.handleChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                    <LabelImportantIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Box mt={1}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={this.state.isLoading || !this.state.newTagName}
+                >
+                  Add Tag
+                </Button>
+              </Box>
+            </form>
+          </Box>
+          <Box display="flex" justifyContent="center" pb={5}>
+            {this.renderChips()}
+          </Box>
         </Paper>
+        <Snackbar
+          open={!!this.state.snackbarMessage}
+          onClose={this.closeSnackbar}
+          message={this.state.snackbarMessage}
+          variant={this.state.snackbarVariant}
+        />
       </ContentWrapper>
     );
+  }
+
+  async getTags() {
+    try {
+      const response = await axios.get('/api/v1/tags');
+
+      if (response.data) {
+        return this.setState({
+          tags: response.data,
+        });
+      }
+      throw new Error('Houston, we have a problem');
+    } catch (err) {
+      let error = err.toString();
+      this.setState({
+        isLoading: false,
+        error,
+      });
+    }
+  }
+
+  renderChips() {
+    return this.state.tags.map((tag) => {
+      return(
+        <Box p={1} key={tag.id}>
+          <Chip
+            label={tag.name}
+            onDelete={() => this.handleChipDelete(tag.id)}
+          />
+        </Box>
+      );
+    })
+  }
+
+  async handleChipDelete(id) {
+    this.setState({
+      isLoading: true,
+    });
+
+    try {
+      const response = await axios.delete(`/api/v1/tags/${id}`);
+
+      if (response.data) {
+        const tags = this.state.tags.filter((tag) => {
+          return tag.id !== id;
+        });
+
+        return this.setState({
+          isLoading: false,
+          tags,
+          snackbarMessage: 'Tag deleted!',
+          snackbarVariant: 'success',
+        });
+      }
+    } catch (err) {
+      this.setState({
+        isLoading: false,
+        snackbarMessage: err.toString(),
+        snackbarVariant: 'error',
+      });
+    }
   }
 
   handleChange(event) {
@@ -74,23 +156,33 @@ class TagManager extends Component {
 
     try {
       const response = await axios.post('/api/v1/tags', {
-        name: this.state.tagName,
+        name: this.state.newTagName,
       });
 
       if (response.data) {
-        console.log(response.data);
-        return this.setState({
+        const tags = this.state.tags;
+        tags.push(response.data);
+        this.setState({
           isLoading: false,
+          tags,
+          snackbarMessage: 'Tag added!',
+          snackbarVariant: 'success',
+          newTagName: '',
         });
       }
-      throw new Error('Houston, we have a problem');
     } catch (err) {
-      let error = err.toString();
       this.setState({
         isLoading: false,
-        error,
+        snackbarMessage: err.toString(),
+        snackbarVariant: 'error',
       });
     }
+  }
+
+  closeSnackbar() {
+    this.setState({
+      snackbarMessage: '',
+    })
   }
 }
 
