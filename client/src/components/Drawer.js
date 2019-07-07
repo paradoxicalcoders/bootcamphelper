@@ -4,7 +4,8 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import BookmarksIcon from '@material-ui/icons/Bookmarks';
+import LinkIcon from '@material-ui/icons/Link';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -44,8 +45,12 @@ const drawerItems = (
     <Divider />
     <List>
       <ListItem component={RouterLink} to="/resources" button>
-        <ListItemIcon><BookmarksIcon /></ListItemIcon>
+        <ListItemIcon><LinkIcon /></ListItemIcon>
         <ListItemText primary="Resources" />
+      </ListItem>
+      <ListItem component={RouterLink} to="/tag-manager" button>
+        <ListItemIcon><LabelImportantIcon /></ListItemIcon>
+        <ListItemText primary="Tag Manager" />
       </ListItem>
     </List>
   </div>
