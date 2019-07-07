@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 
 import AdminDashboard from 'components/AdminDashboard';
+import ContentWrapper from 'components/ContentWrapper';
 import Enrollments from 'components/Enrollments';
 
 class Dashboard extends Component {
 
   render() {
     return (
-      <Box>
-        <Container>
-          <Box pt={10}>
-            {this.renderDashboards()}
-          </Box>
-        </Container>
-      </Box>
+      <ContentWrapper>
+        {this.renderDashboards()}
+      </ContentWrapper>
     );
   }
 
