@@ -117,7 +117,7 @@ class App extends Component {
               />
               <Route
                 exact path='/tag-manager'
-                render={(props) => <TagManager {...props} />}
+                render={(props) => <TagManager {...props} isAdmin={!!(this.state.userAccount && this.state.userAccount.isAdmin)} />}
               />
             </Switch>
           </AuthenticatedLayout>
