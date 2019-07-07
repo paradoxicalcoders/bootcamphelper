@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const sessionsController = require('../../controllers/sessionsController');
+const sessionsController = require('../../controllers/sessions');
 
 // Matches with "/api/auth/login"
 router.route('/enrollment/:id')
