@@ -20,7 +20,6 @@ class Dashboard extends Component {
   }
 
   renderDashboards() {
-    console.log(this.props);
     if (this.props.userAccount && this.props.userAccount.isAdmin) {
       return (
         <AdminDashboard courses={this.props.userAccount.courses} socket={this.props.socket} />
@@ -30,7 +29,7 @@ class Dashboard extends Component {
   }
 
   renderCourses() {
-    if (this.props.userAccount.courses) {
+    if (this.props.userAccount && this.props.userAccount.courses) {
       return (
         <Enrollments enrollments={this.props.userAccount.courses} openModal={this.openModal} />
       )
