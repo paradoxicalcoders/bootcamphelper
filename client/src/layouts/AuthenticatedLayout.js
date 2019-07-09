@@ -72,6 +72,7 @@ class AuthenticatedLayout extends Component {
         <Drawer 
           handleDrawerToggle={this.handleDrawerToggle}
           mobileOpen={this.state.mobileOpen}
+          isAdmin={!!(this.props.userAccount && this.props.userAccount.isAdmin)}
         />
         <main style={{flexGrow: 1, backgroundColor: '#efefef'}}>
           {this.props.children}

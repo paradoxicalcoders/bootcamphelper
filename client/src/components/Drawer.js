@@ -4,7 +4,8 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import BookmarksIcon from '@material-ui/icons/Bookmarks';
+import LinkIcon from '@material-ui/icons/Link';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -32,24 +33,37 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const drawerItems = (
-  <div>
-    <Divider />
-    <List>
-      <ListItem component={RouterLink} to="/dashboard" button>
-        <ListItemIcon><DashboardIcon /></ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
-    </List>
-    <Divider />
-    <List>
-      <ListItem component={RouterLink} to="/resources" button>
-        <ListItemIcon><BookmarksIcon /></ListItemIcon>
-        <ListItemText primary="Resources" />
-      </ListItem>
-    </List>
-  </div>
-);
+const drawerItems = (isAdmin) => {
+  return (
+    <div>
+      <Divider />
+      <List>
+        <ListItem component={RouterLink} to="/dashboard" button>
+          <ListItemIcon><DashboardIcon /></ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem component={RouterLink} to="/resources" button>
+          <ListItemIcon><LinkIcon /></ListItemIcon>
+          <ListItemText primary="Resources" />
+        </ListItem>
+      </List>
+      {drawerTagManager(isAdmin)}
+    </div>
+  );
+} 
+
+const drawerTagManager = (isAdmin) => {
+  if (!isAdmin) return null;
+  return (
+    <ListItem component={RouterLink} to="/tag-manager" button>
+      <ListItemIcon><LabelImportantIcon /></ListItemIcon>
+      <ListItemText primary="Tag Manager" />
+    </ListItem>
+  );
+}
 
 const BootcampDrawer = (props) => {
   const classes = useStyles();
@@ -57,6 +71,7 @@ const BootcampDrawer = (props) => {
   const {
     handleDrawerToggle,
     mobileOpen,
+    isAdmin,
   } = props;
 
   return (
@@ -74,7 +89,7 @@ const BootcampDrawer = (props) => {
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          {drawerItems}
+          {drawerItems(isAdmin)}
         </Drawer>
       </Hidden>
       <Hidden xsDown implementation="css">
@@ -85,7 +100,7 @@ const BootcampDrawer = (props) => {
           variant="permanent"
           open
         >
-          {drawerItems}
+          {drawerItems(isAdmin)}
         </Drawer>
       </Hidden>
     </nav>
