@@ -129,7 +129,7 @@ class LoginPage extends Component {
         email: this.state.email,
         password: this.state.password,
       });
-      console.log(response.data);
+
       if (response.data && response.data.email) {
         this.props.onSignIn(response.data);
         return this.setState({
