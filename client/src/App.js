@@ -6,6 +6,7 @@ import AuthenticatedLayout from 'layouts/AuthenticatedLayout';
 import LoginPage from 'pages/LoginPage';
 import Dashboard from 'pages/Dashboard';
 import Resources from 'pages/Resources';
+import TagManager from 'pages/TagManager';
 
 const socketUrl = process.env.NODE_ENV === 'production' ? "http://kubootcamphelper.herokuapp.com" : "http://localhost:3001";
 const socket = require('socket.io-client')(socketUrl);
@@ -107,12 +108,16 @@ class App extends Component {
           >
             <Switch>
               <Route
-                path='/dashboard'
+                exact path='/dashboard'
                 render={(props) => <Dashboard {...props} userAccount={this.state.userAccount} socket={socket} />}
               />
               <Route
-                path='/resources'
+                exact path='/resources'
                 render={(props) => <Resources {...props} />}
+              />
+              <Route
+                exact path='/tag-manager'
+                render={(props) => <TagManager {...props} />}
               />
             </Switch>
           </AuthenticatedLayout>
