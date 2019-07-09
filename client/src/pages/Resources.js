@@ -18,7 +18,7 @@ class Resources extends Component {
     super(props);
     this.state = {
       url: '',
-      tabValue: 0,
+      tabValue: 2,
     };
 
     this.handleChange = this.handleChange.bind(this);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 import Box from '@material-ui/core/Box';
@@ -34,6 +35,8 @@ class TagManager extends Component {
   }
 
   render() {
+    if (!this.props.isAdmin) return <Redirect to="/dashboard" />
+
     return (
       <ContentWrapper>
         <h1>Tag Manager</h1>
