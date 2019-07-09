@@ -18,6 +18,20 @@ class AuthenticatedLayout extends Component {
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.modalClose = this.modalClose.bind(this);
+
+    // this.receiveQuestion = this.receiveQuestion.bind(this);
+    this.receiveQuestion();
+  }
+
+  // componentDidMount() {
+  //   this.receiveQuestion();
+  // }
+  
+  receiveQuestion = () => {
+    const { socket } = this.props
+    socket.on('GET_QUESTION', (question) => {
+      this.setState({ question, modalOpen: true })
+    })
   }
 
   setMobileOpen(bool) {
@@ -37,6 +51,7 @@ class AuthenticatedLayout extends Component {
   }
 
   render() {
+    // this.emitUser(this.props.userAccount);
     if (!this.props.authenticated) {
       return <Redirect to='/' />;
     }

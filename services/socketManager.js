@@ -10,11 +10,11 @@ module.exports = {
 
     socket.on('SEND_USER_INFO', (user) => {
       console.log(user, 'USER');
-      if (!user || !user.enrollments || user.enrollments.length === 0) return;
+      if (!user || !user.courses || user.courses.length === 0) return;
 
       if (!user.isAdmin) {
-        socket.join(user.enrollments[0].id);
-        users[socket.id].room = user.enrollments[0].id;
+        socket.join(user.courses[0].id);
+        users[socket.id].room = user.courses[0].id;
       }
       console.log(users);
     });
