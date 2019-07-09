@@ -9,7 +9,8 @@ import Dashboard from 'pages/Dashboard';
 import Resources from 'pages/Resources';
 
 const socketUrl = process.env.NODE_ENV === 'production' ? "http://kubootcamphelper.herokuapp.com" : "http://localhost:3001";
-const socket = require('socket.io-client')(socketUrl);
+// const socket = require('socket.io-client')(socketUrl);
+const socket = io(socketUrl);
 
 class App extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class App extends Component {
   }
 
   initSocket = () => {
-    const socket = io(this.state.socketUrl)
+    // const socket = io(socketUrl)
     this.setState({ socket })
   }
 
@@ -53,7 +54,6 @@ class App extends Component {
 
     if (authenticated) {
       this.emitUser(userAccount);
-      this.receiveQuestion();
     }
   }
 
@@ -61,14 +61,6 @@ class App extends Component {
     console.log('emit user');
     console.log(socket);
     socket.emit('SEND_USER_INFO', userAccount)
-  }
-
-  receiveQuestion = () => {
-    socket.on('GET_QUESTION', (question) => {
-      //  const { question } = questionObject.question;
-      //  console.log(questionObject, '-'.repeat(50))
-      this.setState({ question, modalOpen: true })
-    })
   }
 
   onSignIn(userAccount) {
@@ -79,9 +71,8 @@ class App extends Component {
       sessionChecked: true,
     });
     this.emitUser(userAccount);
-    this.receiveQuestion();
   }
-
+  
   onSignOut() {
     window.sessionStorage.clear();
     this.setState({
@@ -89,9 +80,11 @@ class App extends Component {
       userAccount: {},
     });
   }
-
+  
   render() {
     if (!this.state.sessionChecked) return null;
+
+    const { socket } = this.state;
 
     return (
       <Router>
