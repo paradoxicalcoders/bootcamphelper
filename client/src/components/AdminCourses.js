@@ -25,6 +25,7 @@ class AdminCourses extends Component {
       questionTitle: null,
       responses: [],
       responseCount: 0,
+      ftfUsers: [], // Have this hold user response data
       snackbarVariant: 'warning',
       snackbarMessage: '',
     };
@@ -34,11 +35,19 @@ class AdminCourses extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.closeSnackbar = this.closeSnackbar.bind(this);
+
+    this.props.socket.on('GET_MAX_COUNT', (id) => {
+      // const { ftfModalCount } = this.state;
+      console.log(id);
+      this.setState(prevState => ({
+        ftfUsers: [...prevState.ftfUsers, id]
+      }))
+    })
   }
 
-  componentDidMount() {
-    console.log(this.props, 'admin props');
+  componentWillMount() {
     this.addResponse();
+    this.receiveResponseTotal();
   }
 
   render() {
@@ -134,8 +143,9 @@ class AdminCourses extends Component {
   average() {
     const { responses } = this.state;
     if (responses.length) {
-      let sum = responses.reduce((previous, current) => current += previous);
-      let avg = sum / responses.length;
+      const total = responses.map(x => x.val);
+      let sum = total.reduce((previous, current) => current += previous);
+      let avg = sum / total.length;
       return parseFloat(avg).toFixed(1);
     } else {
       return 0
@@ -220,13 +230,27 @@ class AdminCourses extends Component {
     const { socket } = this.props;
     socket.on('GET_RESPONSE', (response) => {
       console.log(response, " - RESPONSE");
-      let { responseCount } = this.state;
+      let { responseCount, ftfUsers } = this.state;
+      const newUsers = ftfUsers.filter(x => response.id !== x);
       this.setState(prevState => ({
         responses: [...prevState.responses, response],
-        responseCount: responseCount + 1
+        responseCount: responseCount + 1,
+        ftfUsers: [newUsers]
       }))
     });
   }
+
+  receiveResponseTotal() {
+    // const { socket } = this.props;
+    // let { ftfModalCount } = this.state;
+    console.log('CHECK COUNT')
+    // socket.on('GET_MAX_COUNT', () => {
+    //   this.setState({
+    //     ftfModalCount: ftfModalCount + 1
+    //   })
+    // })
+  }
+  
 }
 
 export default AdminCourses;

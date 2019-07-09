@@ -28,10 +28,16 @@ class AuthenticatedLayout extends Component {
   // }
   
   receiveQuestion = () => {
-    const { socket } = this.props
-    socket.on('GET_QUESTION', (question) => {
-      this.setState({ question, modalOpen: true })
-    })
+    const { socket, userAccount } = this.props
+    if(!userAccount.isAdmin){
+      socket.on('GET_QUESTION', (questionObject) => {
+        const { question } = questionObject;
+        this.setState({ question, modalOpen: true })
+        const courseID = userAccount.courses[0].id;
+        const userID = userAccount.id
+        socket.emit('GOT_QUESTION', {courseID, userID, question});
+      })
+    }
   }
 
   setMobileOpen(bool) {
@@ -46,8 +52,9 @@ class AuthenticatedLayout extends Component {
 
   modalClose(bool, val) {
     const { socket } = this.props;
+    const { id } = this.props.userAccount;
     this.setState({ modalOpen: bool })
-    socket.emit('SEND_RESPONSE', val)
+    socket.emit('SEND_RESPONSE', {val, id})
   }
 
   render() {
