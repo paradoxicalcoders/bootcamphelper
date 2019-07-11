@@ -16,23 +16,29 @@ const fistToFive = ['FIST', '1', '2', '3', '4', '5'];
 //   },
 // });
 
-export default function SimpleDialog(props) {
-//   const classes = useStyles();
-  const { onClose, question, selectedValue, ...other } = props;
-
+const SimpleDialog = ({
+  onClose,
+  question,
+  selectedValue,
+  ...other
+}) => {
   function handleClose() {
     onClose(false, selectedValue);
   }
 
   function handleListItemClick(value) {
-    console.log(value)
-    if (value === 'FIST') value = 0;
-    onClose(false, +value);
+    let newValue;
+    console.log(value);
+    if (value === 'FIST') newValue = 0;
+    onClose(false, +newValue);
   }
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" {...other}>
-      <DialogTitle id="simple-dialog-title">Fist to Five - {question}</DialogTitle>
+      <DialogTitle id="simple-dialog-title">
+        Fist to Five -
+        {question}
+      </DialogTitle>
       <List>
         {fistToFive.map(count => (
           <ListItem button onClick={() => handleListItemClick(count)} key={count}>
@@ -42,12 +48,12 @@ export default function SimpleDialog(props) {
       </List>
     </Dialog>
   );
-}
+};
 
 SimpleDialog.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool,
+  question: PropTypes.string.isRequired,
   selectedValue: PropTypes.string,
 };
 
-
+export default SimpleDialog;

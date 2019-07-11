@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import Paper from '@material-ui/core/Paper'
+import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -70,7 +71,8 @@ class AdminCourses extends Component {
                   course={course}
                   isSelected={this.state.selectedClasses.indexOf(course.id) !== -1}
                   onClick={this.onClassSelect}
-                />))
+                />
+              ))
               }
             </TableBody>
           </Table>
@@ -113,9 +115,18 @@ class AdminCourses extends Component {
         {this.state.questionCreated ? (
           <Box mt={5}>
             <Paper mt={4}>
-              <Box py={5} px={10} align={"center"}>
+              <Box py={5} px={10} align="center">
                 <h2>{this.state.questionTitle}</h2>
-                <p>Response Count: {this.state.responseCount} <b>|</b> Average: {this.average()}</p>
+                <p>
+                  Response Count:
+                  {this.state.responseCount}
+                  {' '}
+                  <b>|</b>
+                  {' '}
+                  Average:
+                  {' '}
+                  {this.average()}
+                </p>
               </Box>
             </Paper>
           </Box>
@@ -134,34 +145,31 @@ class AdminCourses extends Component {
   average() {
     const { responses } = this.state;
     if (responses.length) {
-      let sum = responses.reduce((previous, current) => current += previous);
-      let avg = sum / responses.length;
-      return parseFloat(avg).toFixed(1);
-    } else {
-      return 0
+      const sum = responses.reduce((previous, current) => current + previous);
+      const avg = sum / responses.length;
+      return avg.toFixed(1);
     }
+    return 0;
   }
 
   toggleSelectAll(e) {
-    const checked = e.target.checked;
-    let selectedClasses = this.state.selectedClasses;
+    const { checked } = e.target;
+    let { selectedClasses } = this.state;
     if (!checked) {
       selectedClasses = [];
     } else {
-      selectedClasses = this.props.courses.map((course) => {
-        return course.id;
-      });
+      selectedClasses = this.props.courses.map(course => course.id);
     }
 
     this.setState({
       selectedClasses,
-    }, () => console.log(this.state.selectedClasses))
+    }, () => console.log(this.state.selectedClasses));
   }
 
   onClassSelect(e) {
     const isChecked = e.target.checked;
     const value = parseInt(e.target.value, 10);
-    let selectedClasses = this.state.selectedClasses;
+    let { selectedClasses } = this.state;
 
     if (isChecked && selectedClasses.indexOf(value) === -1) {
       selectedClasses.push(value);
@@ -213,20 +221,40 @@ class AdminCourses extends Component {
   closeSnackbar() {
     this.setState({
       snackbarMessage: '',
-    })
+    });
   }
 
   addResponse() {
     const { socket } = this.props;
     socket.on('GET_RESPONSE', (response) => {
-      console.log(response, " - RESPONSE");
-      let { responseCount } = this.state;
+      console.log(response, ' - RESPONSE');
+      const { responseCount } = this.state;
       this.setState(prevState => ({
         responses: [...prevState.responses, response],
-        responseCount: responseCount + 1
-      }))
+        responseCount: responseCount + 1,
+      }));
     });
   }
 }
+
+AdminCourses.propTypes = {
+  socket: PropTypes.object.isRequired,
+  courses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      cohortId: PropTypes.number,
+      startDate: PropTypes.string,
+      endDate: PropTypes.string,
+      programName: PropTypes.string,
+      programType: PropTypes.string,
+      universityName: PropTypes.string,
+      universityLogo: PropTypes.string,
+      maxAbsences: PropTypes.number,
+      maxRemotes: PropTypes.number,
+      maxMissedGeneral: PropTypes.number,
+      maxMissedRequired: PropTypes.number,
+    }),
+  ),
+};
 
 export default AdminCourses;
