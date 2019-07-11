@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -32,7 +33,7 @@ const BootcampAppbar = (props) => {
   const {
     email,
     handleDrawerToggle,
-    onSignOut
+    onSignOut,
   } = props;
 
   return (
@@ -60,6 +61,12 @@ const BootcampAppbar = (props) => {
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+BootcampAppbar.propTypes = {
+  email: PropTypes.string.isRequired,
+  handleDrawerToggle: PropTypes.func.isRequired,
+  onSignOut: PropTypes.func.isRequired,
+};
 
 export default BootcampAppbar;

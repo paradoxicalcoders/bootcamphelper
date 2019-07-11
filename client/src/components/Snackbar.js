@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -8,7 +9,9 @@ import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
-import { amber, green, red, purple } from '@material-ui/core/colors';
+import {
+  amber, green, red, purple,
+} from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 
 const variantIcon = {
@@ -26,7 +29,7 @@ const styles = {
     backgroundColor: red[900],
   },
   info: {
-    backgroundColor: purple[300]
+    backgroundColor: purple[300],
   },
   warning: {
     backgroundColor: amber[700],
@@ -45,7 +48,6 @@ const styles = {
 };
 
 class BootcampSnackbar extends Component {
-
   render() {
     const {
       anchorOrigin,
@@ -72,12 +74,12 @@ class BootcampSnackbar extends Component {
         <SnackbarContent
           className={clsx(classes[variant], className)}
           aria-describedby="client-snackbar"
-          message={
+          message={(
             <span id="client-snackbar" className={classes.message}>
               <Icon className={clsx(classes.icon, classes.iconVariant)} />
               {message}
             </span>
-          }
+          )}
           action={[
             <IconButton key="close" aria-label="Close" color="inherit" onClick={onClose}>
               <CloseIcon className={classes.icon} />
@@ -93,6 +95,17 @@ class BootcampSnackbar extends Component {
 Snackbar.defaultProps = {
   anchorOrigin: { horizontal: 'right', vertical: 'top' },
   variant: 'info',
+};
+
+BootcampSnackbar.propTypes = {
+  anchorOrigin: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
+  className: PropTypes.string.isRequired,
+  classes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  other: PropTypes.array,
 };
 
 export default withStyles(styles)(BootcampSnackbar);

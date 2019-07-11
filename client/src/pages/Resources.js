@@ -52,10 +52,10 @@ class Resources extends Component {
 
   renderTabContent() {
     if (this.state.tabValue === 0) {
-      return <h2>Favorites</h2>
+      return <h2>Favorites</h2>;
     }
     if (this.state.tabValue === 1) {
-      return <h2>My List</h2>
+      return <h2>My List</h2>;
     }
     return (
       <Box
@@ -88,7 +88,7 @@ class Resources extends Component {
   handleChange(event, newValue) {
     this.setState({
       tabValue: newValue,
-    })
+    });
   }
 }
 

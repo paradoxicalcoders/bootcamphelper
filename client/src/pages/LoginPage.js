@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import 'index.css';
 
 import Box from '@material-ui/core/Box';
-import Button  from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField  from '@material-ui/core/TextField';
+import TextField from '@material-ui/core/TextField';
 
-import LoginPageCardHeader from 'components/LoginPageCardHeader.js';
+import LoginPageCardHeader from 'components/LoginPageCardHeader';
 import Snackbar from 'components/Snackbar';
 
 class LoginPage extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -31,9 +31,64 @@ class LoginPage extends Component {
     this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
+  closeSnackbar() {
+    this.setState({
+      error: '',
+    });
+  }
+
+  handleChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
+
+    this.setState({
+      isLoading: true,
+    });
+
+    try {
+      const response = await axios.post('/api/v1/auth/login', {
+        email: this.state.email,
+        password: this.state.password,
+      });
+
+      if (response.data && response.data.email) {
+        this.props.onSignIn(response.data);
+        this.setState({
+          isLoading: false,
+          loginSuccess: true,
+        });
+      } else {
+        throw new Error('Houston, we have a problem');
+      }
+    } catch (err) {
+      let error = err.toString();
+      if (error.indexOf('401') !== -1) {
+        error = 'That password didn\'t work.';
+      }
+      this.setState({
+        isLoading: false,
+        error,
+      });
+    }
+  }
+
+  renderLoginButtonText() {
+    if (this.state.isLoading) {
+      return (
+        <CircularProgress size={23} />
+      );
+    }
+    return (
+      <span>Sign In</span>
+    );
+  }
+
   render() {
     if (this.state.loginSuccess) {
-      return <Redirect to='/dashboard' />;
+      return <Redirect to="/dashboard" />;
     }
 
     return (
@@ -58,7 +113,8 @@ class LoginPage extends Component {
                 name="email"
                 autoFocus
                 autoComplete="email"
-                value={this.state.email} onChange={this.handleChange}
+                value={this.state.email}
+                onChange={this.handleChange}
               />
               <TextField
                 variant="outlined"
@@ -70,7 +126,8 @@ class LoginPage extends Component {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                value={this.state.password} onChange={this.handleChange}
+                value={this.state.password}
+                onChange={this.handleChange}
               />
               <Box mt={1}>
                 <Button
@@ -95,60 +152,10 @@ class LoginPage extends Component {
       </Box>
     );
   }
-
-  closeSnackbar() {
-    this.setState({
-      error: '',
-    })
-  }
-
-  renderLoginButtonText() {
-    if (this.state.isLoading) {
-      return (
-        <CircularProgress size={23} />
-      );
-    }
-    return (
-      <span>Sign In</span>
-    );
-  }
-
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  async handleSubmit(event) {
-    event.preventDefault();
-
-    this.setState({
-      isLoading: true,
-    });
-
-    try {
-      const response = await axios.post('/api/v1/auth/login', {
-        email: this.state.email,
-        password: this.state.password,
-      });
-
-      if (response.data && response.data.email) {
-        this.props.onSignIn(response.data);
-        return this.setState({
-          isLoading: false,
-          loginSuccess: true,
-        });
-      }
-      throw new Error('Houston, we have a problem');
-    } catch (err) {
-      let error = err.toString();
-      if (error.indexOf('401') !== -1) {
-        error = 'That password didn\'t work.';
-      }
-      this.setState({
-        isLoading: false,
-        error,
-      });
-    }
-  }
 }
+
+LoginPage.propTypes = {
+  onSignIn: PropTypes.func.isRequired,
+};
 
 export default LoginPage;

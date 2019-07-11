@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
@@ -35,7 +36,7 @@ class TagManager extends Component {
   }
 
   render() {
-    if (!this.props.isAdmin) return <Redirect to="/dashboard" />
+    if (!this.props.isAdmin) return <Redirect to="/dashboard" />;
 
     return (
       <ContentWrapper>
@@ -54,7 +55,7 @@ class TagManager extends Component {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                    <LabelImportantIcon color="primary" />
+                      <LabelImportantIcon color="primary" />
                     </InputAdornment>
                   ),
                 }}
@@ -90,13 +91,14 @@ class TagManager extends Component {
       const response = await axios.get('/api/v1/tags');
 
       if (response.data) {
-        return this.setState({
+        this.setState({
           tags: response.data,
         });
+      } else {
+        throw new Error('Houston, we have a problem');
       }
-      throw new Error('Houston, we have a problem');
     } catch (err) {
-      let error = err.toString();
+      const error = err.toString();
       this.setState({
         isLoading: false,
         error,
@@ -105,16 +107,14 @@ class TagManager extends Component {
   }
 
   renderChips() {
-    return this.state.tags.map((tag) => {
-      return(
-        <Box p={1} key={tag.id}>
-          <Chip
-            label={tag.name}
-            onDelete={() => this.handleChipDelete(tag.id)}
-          />
-        </Box>
-      );
-    })
+    return this.state.tags.map(tag => (
+      <Box p={1} key={tag.id}>
+        <Chip
+          label={tag.name}
+          onDelete={() => this.handleChipDelete(tag.id)}
+        />
+      </Box>
+    ));
   }
 
   async handleChipDelete(id) {
@@ -126,11 +126,9 @@ class TagManager extends Component {
       const response = await axios.delete(`/api/v1/tags/${id}`);
 
       if (response.data) {
-        const tags = this.state.tags.filter((tag) => {
-          return tag.id !== id;
-        });
+        const tags = this.state.tags.filter(tag => tag.id !== id);
 
-        return this.setState({
+        this.setState({
           isLoading: false,
           tags,
           snackbarMessage: 'Tag deleted!',
@@ -163,7 +161,7 @@ class TagManager extends Component {
       });
 
       if (response.data) {
-        const tags = this.state.tags;
+        const { tags } = this.state;
         tags.push(response.data);
         this.setState({
           isLoading: false,
@@ -185,8 +183,12 @@ class TagManager extends Component {
   closeSnackbar() {
     this.setState({
       snackbarMessage: '',
-    })
+    });
   }
 }
+
+TagManager.propTypes = {
+  isAdmin: PropTypes.bool.isRequired,
+};
 
 export default TagManager;

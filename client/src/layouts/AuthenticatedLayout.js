@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,19 +21,18 @@ class AuthenticatedLayout extends Component {
     this.modalClose = this.modalClose.bind(this);
 
     // this.receiveQuestion = this.receiveQuestion.bind(this);
+    this.receiveQuestion = () => {
+      const { socket } = this.props;
+      socket.on('GET_QUESTION', (question) => {
+        this.setState({ question, modalOpen: true });
+      });
+    };
     this.receiveQuestion();
   }
 
   // componentDidMount() {
   //   this.receiveQuestion();
   // }
-  
-  receiveQuestion = () => {
-    const { socket } = this.props
-    socket.on('GET_QUESTION', (question) => {
-      this.setState({ question, modalOpen: true })
-    })
-  }
 
   setMobileOpen(bool) {
     this.setState({
@@ -46,8 +46,8 @@ class AuthenticatedLayout extends Component {
 
   modalClose(bool, val) {
     const { socket } = this.props;
-    this.setState({ modalOpen: bool })
-    socket.emit('SEND_RESPONSE', val)
+    this.setState({ modalOpen: bool });
+    socket.emit('SEND_RESPONSE', val);
   }
 
   render() {
@@ -62,19 +62,19 @@ class AuthenticatedLayout extends Component {
     } = this.props;
 
     return (
-      <div style={{display: 'flex'}}>
+      <div style={{ display: 'flex' }}>
         <CssBaseline />
-        <Appbar 
+        <Appbar
           handleDrawerToggle={this.handleDrawerToggle}
           email={userAccount && userAccount.email}
           onSignOut={onSignOut}
         />
-        <Drawer 
+        <Drawer
           handleDrawerToggle={this.handleDrawerToggle}
           mobileOpen={this.state.mobileOpen}
           isAdmin={!!(this.props.userAccount && this.props.userAccount.isAdmin)}
         />
-        <main style={{flexGrow: 1, backgroundColor: '#efefef'}}>
+        <main style={{ flexGrow: 1, backgroundColor: '#efefef' }}>
           {this.props.children}
         </main>
         <DialogModal
@@ -89,6 +89,14 @@ class AuthenticatedLayout extends Component {
       </div>
     );
   }
+}
+
+AuthenticatedLayout.propTypes = {
+  socket: PropTypes.object.isRequired,
+  authenticated: PropTypes.bool.isRequired,
+  onSignOut: PropTypes.func.isRequired,
+  userAccount: PropTypes.object.isRequired,
+  children: PropTypes.object,
 };
 
 export default AuthenticatedLayout;
