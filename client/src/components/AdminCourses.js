@@ -37,11 +37,11 @@ class AdminCourses extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.closeSnackbar = this.closeSnackbar.bind(this);
 
-    this.props.socket.on('GET_MAX_COUNT', (id) => {
-      // const { ftfModalCount } = this.state;
-      console.log(id);
+    this.props.socket.on('GET_MAX_COUNT', (userInfo) => {
+      userInfo.answer = null;
+      console.log(userInfo);
       this.setState(prevState => ({
-        ftfUsers: [...prevState.ftfUsers, id],
+        ftfUsers: [...prevState.ftfUsers, userInfo],
       }));
     });
   }
@@ -123,6 +123,7 @@ class AdminCourses extends Component {
             <Paper mt={4}>
               <Box py={5} px={10} align="center">
                 <h2>{this.state.questionTitle}</h2>
+                <p>Total Users: {this.state.ftfUsers.length ? this.state.ftfUsers.length : ''}</p>
                 <p>
                   Response Count:
                   {this.state.responseCount} <b>|</b> Average: {this.average()}
@@ -147,7 +148,7 @@ class AdminCourses extends Component {
   average() {
     const { responses } = this.state;
     if (responses.length) {
-      const total = responses.map(x => x.val);
+      const total = responses.map(x => x.resAnswer);
       const sum = total.reduce((previous, current) => (current += previous));
       const avg = sum / total.length;
       return parseFloat(avg).toFixed(1);
@@ -238,25 +239,21 @@ class AdminCourses extends Component {
     socket.on('GET_RESPONSE', (response) => {
       console.log(response, ' - RESPONSE');
       const { responseCount, ftfUsers } = this.state;
-      const newUsers = ftfUsers.filter(x => response.id !== x);
+      const ftfNewUsersValue = ftfUsers.map((x) => {
+        if (x.userID === response.UserId) {
+          const newX = x;
+          newX.answer = response.resAnswer;
+          return newX;
+        }
+        return x;
+      });
       this.setState(prevState => ({
         responses: [...prevState.responses, response],
         responseCount: responseCount + 1,
-        ftfUsers: [newUsers],
+        ftfUsers: ftfNewUsersValue,
       }));
     });
   }
-
-  // receiveResponseTotal() {
-  //   // const { socket } = this.props;
-  //   // let { ftfModalCount } = this.state;
-  //   console.log('CHECK COUNT')
-  //   // socket.on('GET_MAX_COUNT', () => {
-  //   //   this.setState({
-  //   //     ftfModalCount: ftfModalCount + 1
-  //   //   })
-  //   // })
-  // }
 }
 
 AdminCourses.propTypes = {

@@ -17,7 +17,7 @@ module.exports = {
         users[socket.id].room = user.courses[0].id;
       } else if (user.isAdmin) {
         users[socket.id].room = [];
-        user.courses.forEach(element => {
+        user.courses.forEach((element) => {
           // socket.join(element.id);
           // socket.join(`${element.id}+admin`);
           users[socket.id].room.push(element.id, `${element.id}+admin`);
@@ -29,19 +29,28 @@ module.exports = {
     });
 
     socket.on('SEND_QUESTION', (questionObject) => {
-      const { question, selectedClasses } = questionObject;
-      console.log(question, selectedClasses);
+      const { id: QuestionId, question, selectedClasses } = questionObject;
+      console.log(QuestionId, question, selectedClasses);
       selectedClasses.forEach((id) => {
-        io.to(id).emit('GET_QUESTION', { selectedClasses, question});
+        io.to(id).emit('GET_QUESTION', {
+          QuestionId,
+          question,
+          selectedClasses,
+        });
       });
     });
 
     socket.on('GOT_QUESTION', (obj) => {
-      const {courseID, userID, question} = obj;
-      console.log(`${courseID}+admin`);
-      io.to(`${courseID}+admin`).emit('GET_MAX_COUNT', userID);
-    })
-    
+      const { courseID, userID, questionObj } = obj;
+      const { question, QuestionId } = questionObj;
+      io.to(`${courseID}+admin`).emit('GET_MAX_COUNT', {
+        courseID,
+        userID,
+        question,
+        QuestionId,
+      });
+    });
+
     socket.on('SEND_RESPONSE', (res) => {
       socket.broadcast.emit('GET_RESPONSE', res);
     });

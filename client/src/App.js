@@ -60,9 +60,7 @@ class App extends Component {
     }
   }
 
-  emitUser = (userAccount) => {
-    console.log('emit user');
-    console.log(socket);
+  emitUser(userAccount) {
     socket.emit('SEND_USER_INFO', userAccount);
   }
 

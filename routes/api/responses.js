@@ -1,4 +1,6 @@
 const router = require('express').Router();
-const questionController = require('../../controllers/questions');
+const responsesController = require('../../controllers/responses');
 
-router.route('/').post(questionController.create);
+router.route('/').post(responsesController.create);
+
+module.exports = router;
