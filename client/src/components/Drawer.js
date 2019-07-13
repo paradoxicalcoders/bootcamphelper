@@ -107,7 +107,7 @@ const BootcampDrawer = (props) => {
 };
 
 BootcampDrawer.propTypes = {
-  drawerTagManager: PropTypes.func.isRequired,
+  // drawerTagManager: PropTypes.func.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,
   mobileOpen: PropTypes.bool.isRequired,
   isAdmin: PropTypes.bool.isRequired,

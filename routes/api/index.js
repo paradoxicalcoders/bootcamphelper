@@ -5,6 +5,7 @@ const sessionsRoutes = require('./sessions');
 const questionRoutes = require('./questions');
 const tagRoutes = require('./tags');
 const resourceRoutes = require('./resources');
+const responseRoutes = require('./responses');
 
 // Book routes
 router.use('/auth', authRoutes);
@@ -13,5 +14,6 @@ router.use('/sessions', sessionsRoutes);
 router.use('/questions', questionRoutes);
 router.use('/tags', tagRoutes);
 router.use('/resources', resourceRoutes);
+router.use('/responses', responseRoutes);
 
 module.exports = router;
