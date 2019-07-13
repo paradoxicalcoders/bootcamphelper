@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Checkbox from '@material-ui/core/Checkbox';
 import TableCell from '@material-ui/core/TableCell';
@@ -19,10 +20,6 @@ class AdminCouseItem extends Component {
       onClick,
     } = this.props;
 
-    const _dow = dayjs(startDate).format('dddd');
-    const _startDate = dayjs(startDate).format('MMMM d, YYYY');
-    const _endDate = dayjs(endDate).format('MMMM d, YYYY');
-
     return (
       <TableRow>
         <TableCell padding="checkbox">
@@ -35,12 +32,24 @@ class AdminCouseItem extends Component {
         <TableCell>{id}</TableCell>
         <TableCell>{programType}</TableCell>
         <TableCell>{programName}</TableCell>
-        <TableCell align="center">{_dow}</TableCell>
-        <TableCell align="right">{_startDate}</TableCell>
-        <TableCell align="right">{_endDate}</TableCell>
+        <TableCell align="center">{dayjs(startDate).format('dddd')}</TableCell>
+        <TableCell align="right">{dayjs(startDate).format('MMMM d, YYYY')}</TableCell>
+        <TableCell align="right">{dayjs(endDate).format('MMMM d, YYYY')}</TableCell>
       </TableRow>
     );
   }
 }
+
+AdminCouseItem.propTypes = {
+  course: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    programType: PropTypes.string.isRequired,
+    programName: PropTypes.string.isRequired,
+    startDate: PropTypes.string.isRequired,
+    endDate: PropTypes.string.isRequired,
+  }),
+  isSelected: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default AdminCouseItem;

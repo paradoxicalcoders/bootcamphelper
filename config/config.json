@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "root",
+    "username": "testing",
     "password": null,
     "database": "bootcamphelper",
     "host": "127.0.0.1",

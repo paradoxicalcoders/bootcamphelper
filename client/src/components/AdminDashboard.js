@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import AdminCourses from 'components/AdminCourses';
 
@@ -18,5 +19,25 @@ class AdminDashboard extends Component {
     );
   }
 }
+
+AdminDashboard.propTypes = {
+  socket: PropTypes.object.isRequired,
+  courses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      cohortId: PropTypes.number,
+      startDate: PropTypes.string,
+      endDate: PropTypes.string,
+      programName: PropTypes.string,
+      programType: PropTypes.string,
+      universityName: PropTypes.string,
+      universityLogo: PropTypes.string,
+      maxAbsences: PropTypes.number,
+      maxRemotes: PropTypes.number,
+      maxMissedGeneral: PropTypes.number,
+      maxMissedRequired: PropTypes.number,
+    }),
+  ),
+};
 
 export default AdminDashboard;

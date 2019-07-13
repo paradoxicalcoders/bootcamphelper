@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -33,28 +34,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const drawerItems = (isAdmin) => {
-  return (
-    <div>
-      <Divider />
-      <List>
-        <ListItem component={RouterLink} to="/dashboard" button>
-          <ListItemIcon><DashboardIcon /></ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem component={RouterLink} to="/resources" button>
-          <ListItemIcon><LinkIcon /></ListItemIcon>
-          <ListItemText primary="Resources" />
-        </ListItem>
-      </List>
-      {drawerTagManager(isAdmin)}
-    </div>
-  );
-} 
-
 const drawerTagManager = (isAdmin) => {
   if (!isAdmin) return null;
   return (
@@ -63,7 +42,27 @@ const drawerTagManager = (isAdmin) => {
       <ListItemText primary="Tag Manager" />
     </ListItem>
   );
-}
+};
+
+const drawerItems = isAdmin => (
+  <div>
+    <Divider />
+    <List>
+      <ListItem component={RouterLink} to="/dashboard" button>
+        <ListItemIcon><DashboardIcon /></ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </List>
+    <Divider />
+    <List>
+      <ListItem component={RouterLink} to="/resources" button>
+        <ListItemIcon><LinkIcon /></ListItemIcon>
+        <ListItemText primary="Resources" />
+      </ListItem>
+    </List>
+    {drawerTagManager(isAdmin)}
+  </div>
+);
 
 const BootcampDrawer = (props) => {
   const classes = useStyles();
@@ -105,6 +104,13 @@ const BootcampDrawer = (props) => {
       </Hidden>
     </nav>
   );
-}
+};
+
+BootcampDrawer.propTypes = {
+  // drawerTagManager: PropTypes.func.isRequired,
+  handleDrawerToggle: PropTypes.func.isRequired,
+  mobileOpen: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+};
 
 export default BootcampDrawer;
