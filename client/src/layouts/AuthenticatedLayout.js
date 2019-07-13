@@ -20,20 +20,34 @@ class AuthenticatedLayout extends Component {
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.modalClose = this.modalClose.bind(this);
 
-    const { socket } = this.props;
-    socket.on('GET_QUESTION', (questionObj) => {
-      console.log(questionObj)
-      this.setState({ questionObj, modalOpen: true });
-    });
+    // const { socket } = this.props;
+    // socket.on('GET_QUESTION', questionObj => {
+    //   console.log(questionObj);
+    //   this.setState({ questionObj, modalOpen: true });
+    // });
     // this.receiveQuestion = this.receiveQuestion.bind(this);
     // this.receiveQuestion = () => {
     // };
-    // this.receiveQuestion();
+    this.receiveQuestion();
   }
 
   // componentDidMount() {
   //   this.receiveQuestion();
   // }
+
+  receiveQuestion = () => {
+    const { socket, userAccount } = this.props;
+    if (!userAccount.isAdmin) {
+      socket.on('GET_QUESTION', questionObject => {
+        console.log(questionObject);
+        const { question } = questionObject;
+        this.setState({ question, modalOpen: true });
+        const CourseId = userAccount.courses[0].id;
+        const UserId = userAccount.id;
+        socket.emit('GOT_QUESTION', { courseID: CourseId, userID: UserId, question });
+      });
+    }
+  };
 
   setMobileOpen(bool) {
     this.setState({
@@ -45,23 +59,25 @@ class AuthenticatedLayout extends Component {
     this.setMobileOpen(!this.state.mobileOpen);
   }
 
-  modalClose(bool, val) {
+  async modalClose(bool, val) {
     const { socket, userAccount } = this.props;
     const { id: UserId } = userAccount;
-    this.setState({ modalOpen: bool });
-    socket.emit('SEND_RESPONSE', val);
+
+    try {
+      this.setState({ modalOpen: bool });
+      socket.emit('SEND_RESPONSE', { val, UserId });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
     // this.emitUser(this.props.userAccount);
     if (!this.props.authenticated) {
-      return <Redirect to='/' />;
+      return <Redirect to="/" />;
     }
 
-    const {
-      onSignOut,
-      userAccount,
-    } = this.props;
+    const { onSignOut, userAccount } = this.props;
 
     return (
       <div style={{ display: 'flex' }}>
@@ -76,9 +92,7 @@ class AuthenticatedLayout extends Component {
           mobileOpen={this.state.mobileOpen}
           isAdmin={!!(this.props.userAccount && this.props.userAccount.isAdmin)}
         />
-        <main style={{ flexGrow: 1, backgroundColor: '#efefef' }}>
-          {this.props.children}
-        </main>
+        <main style={{ flexGrow: 1, backgroundColor: '#efefef' }}>{this.props.children}</main>
         <DialogModal
           maxWidth={'sm'}
           disableBackdropClick={true}
@@ -86,7 +100,7 @@ class AuthenticatedLayout extends Component {
           fullWidth={true}
           open={this.state.modalOpen}
           onClose={this.modalClose}
-          question={(this.state.questionObj ? this.state.questionObj.title : '')}
+          question={this.state.questionObj ? this.state.questionObj.title : ''}
         />
       </div>
     );

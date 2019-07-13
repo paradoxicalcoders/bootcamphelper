@@ -26,6 +26,7 @@ class AdminCourses extends Component {
       questionTitle: null,
       responses: [],
       responseCount: 0,
+      ftfUsers: [], // Have this hold user response data
       snackbarVariant: 'warning',
       snackbarMessage: '',
     };
@@ -35,11 +36,19 @@ class AdminCourses extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.closeSnackbar = this.closeSnackbar.bind(this);
+
+    this.props.socket.on('GET_MAX_COUNT', (id) => {
+      // const { ftfModalCount } = this.state;
+      console.log(id);
+      this.setState(prevState => ({
+        ftfUsers: [...prevState.ftfUsers, id],
+      }));
+    });
   }
 
-  componentDidMount() {
-    console.log(this.props, 'admin props');
+  componentWillMount() {
     this.addResponse();
+    // this.receiveResponseTotal();
   }
 
   render() {
@@ -72,8 +81,7 @@ class AdminCourses extends Component {
                   isSelected={this.state.selectedClasses.indexOf(course.id) !== -1}
                   onClick={this.onClassSelect}
                 />
-              ))
-              }
+              ))}
             </TableBody>
           </Table>
         </Paper>
@@ -81,9 +89,7 @@ class AdminCourses extends Component {
         <Box mt={5}>
           <Paper mt={4}>
             <Box py={5} px={10}>
-              <form
-                onSubmit={this.handleSubmit}
-              >
+              <form onSubmit={this.handleSubmit}>
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -119,18 +125,14 @@ class AdminCourses extends Component {
                 <h2>{this.state.questionTitle}</h2>
                 <p>
                   Response Count:
-                  {this.state.responseCount}
-                  {' '}
-                  <b>|</b>
-                  {' '}
-                  Average:
-                  {' '}
-                  {this.average()}
+                  {this.state.responseCount} <b>|</b> Average: {this.average()}
                 </p>
               </Box>
             </Paper>
           </Box>
-        ) : false}
+        ) : (
+          false
+        )}
 
         <Snackbar
           open={!!this.state.snackbarMessage}
@@ -145,9 +147,10 @@ class AdminCourses extends Component {
   average() {
     const { responses } = this.state;
     if (responses.length) {
-      const sum = responses.reduce((previous, current) => current + previous);
-      const avg = sum / responses.length;
-      return avg.toFixed(1);
+      const total = responses.map(x => x.val);
+      const sum = total.reduce((previous, current) => (current += previous));
+      const avg = sum / total.length;
+      return parseFloat(avg).toFixed(1);
     }
     return 0;
   }
@@ -161,9 +164,12 @@ class AdminCourses extends Component {
       selectedClasses = this.props.courses.map(course => course.id);
     }
 
-    this.setState({
-      selectedClasses,
-    }, () => console.log(this.state.selectedClasses));
+    this.setState(
+      {
+        selectedClasses,
+      },
+      () => console.log(this.state.selectedClasses),
+    );
   }
 
   onClassSelect(e) {
@@ -177,9 +183,12 @@ class AdminCourses extends Component {
       selectedClasses = selectedClasses.filter(id => id !== value);
     }
 
-    this.setState({
-      selectedClasses,
-    }, () => console.log(this.state.selectedClasses));
+    this.setState(
+      {
+        selectedClasses,
+      },
+      () => console.log(this.state.selectedClasses),
+    );
   }
 
   handleChange(event) {
@@ -197,9 +206,9 @@ class AdminCourses extends Component {
         enrollments: this.state.selectedClasses,
       });
       console.log(response.data);
-      const { question } = response.data;
+      const { id, question } = response.data;
 
-      socket.emit('SEND_QUESTION', { question, selectedClasses });
+      socket.emit('SEND_QUESTION', { question, id, selectedClasses });
       this.setState({
         questionCreated: true,
         questionTitle: question,
@@ -228,13 +237,26 @@ class AdminCourses extends Component {
     const { socket } = this.props;
     socket.on('GET_RESPONSE', (response) => {
       console.log(response, ' - RESPONSE');
-      const { responseCount } = this.state;
+      const { responseCount, ftfUsers } = this.state;
+      const newUsers = ftfUsers.filter(x => response.id !== x);
       this.setState(prevState => ({
         responses: [...prevState.responses, response],
         responseCount: responseCount + 1,
+        ftfUsers: [newUsers],
       }));
     });
   }
+
+  // receiveResponseTotal() {
+  //   // const { socket } = this.props;
+  //   // let { ftfModalCount } = this.state;
+  //   console.log('CHECK COUNT')
+  //   // socket.on('GET_MAX_COUNT', () => {
+  //   //   this.setState({
+  //   //     ftfModalCount: ftfModalCount + 1
+  //   //   })
+  //   // })
+  // }
 }
 
 AdminCourses.propTypes = {
