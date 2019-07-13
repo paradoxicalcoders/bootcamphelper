@@ -13,21 +13,22 @@ class AuthenticatedLayout extends Component {
     super(props);
     this.state = {
       modalOpen: false,
-      question: null,
+      questionObj: null,
       mobileOpen: false,
     };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.modalClose = this.modalClose.bind(this);
 
+    const { socket } = this.props;
+    socket.on('GET_QUESTION', (questionObj) => {
+      console.log(questionObj)
+      this.setState({ questionObj, modalOpen: true });
+    });
     // this.receiveQuestion = this.receiveQuestion.bind(this);
-    this.receiveQuestion = () => {
-      const { socket } = this.props;
-      socket.on('GET_QUESTION', (question) => {
-        this.setState({ question, modalOpen: true });
-      });
-    };
-    this.receiveQuestion();
+    // this.receiveQuestion = () => {
+    // };
+    // this.receiveQuestion();
   }
 
   // componentDidMount() {
@@ -45,7 +46,8 @@ class AuthenticatedLayout extends Component {
   }
 
   modalClose(bool, val) {
-    const { socket } = this.props;
+    const { socket, userAccount } = this.props;
+    const { id: UserId } = userAccount;
     this.setState({ modalOpen: bool });
     socket.emit('SEND_RESPONSE', val);
   }
@@ -84,7 +86,7 @@ class AuthenticatedLayout extends Component {
           fullWidth={true}
           open={this.state.modalOpen}
           onClose={this.modalClose}
-          question={this.state.question}
+          question={(this.state.questionObj ? this.state.questionObj.title : '')}
         />
       </div>
     );
