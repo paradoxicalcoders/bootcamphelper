@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
 import Tab from '@material-ui/core/Tab';
@@ -10,6 +11,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import LinkIcon from '@material-ui/icons/Link';
 import TextField from '@material-ui/core/TextField';
+import TitleIcon from '@material-ui/icons/Title';
 
 import ContentWrapper from 'components/ContentWrapper';
 
@@ -17,11 +19,13 @@ class Resources extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      title: '',
       url: '',
       tabValue: 2,
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   render() {
@@ -31,7 +35,7 @@ class Resources extends Component {
         <Paper square>
           <Tabs
             value={this.state.tabValue}
-            onChange={this.handleChange}
+            onChange={this.handleTabChange}
             variant="fullWidth"
             indicatorColor="secondary"
             textColor="secondary"
@@ -64,31 +68,69 @@ class Resources extends Component {
       >
         <form
           onSubmit={this.handleSubmit}
+          style={{width: '100%', maxWidth: 600, paddingLeft: 10, paddingRight: 10 }}
         >
-          <TextField
-            id="outlined-adornment-link"
-            variant="outlined"
-            type="text"
-            label="URL"
-            value={this.state.url}
-            // onChange={handleChange('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <LinkIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Box my={2}>
+            <TextField
+              id="outlined-adornment-title"
+              variant="outlined"
+              type="text"
+              label="Title"
+              fullWidth
+              name="title"
+              value={this.state.title}
+              onChange={this.handleInputChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <TitleIcon color="primary" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Box my={2}>
+            <TextField
+              id="outlined-adornment-link"
+              variant="outlined"
+              type="text"
+              label="URL"
+              fullWidth
+              name="url"
+              value={this.state.url}
+              onChange={this.handleInputChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <LinkIcon color="primary" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Box mt={1}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={this.state.isLoading || !this.state.title || !this.state.url}
+            >
+              Save Resource
+            </Button>
+          </Box>
         </form>
       </Box>
     );
   }
 
-  handleChange(event, newValue) {
+  handleTabChange(event, newValue) {
     this.setState({
       tabValue: newValue,
     });
+  }
+
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
   }
 }
 

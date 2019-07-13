@@ -95,3 +95,6 @@ typings/
 
 # JShint - TIM
 .jshintrc
+
+VS Code Workspace Files
+*.code-workspace
