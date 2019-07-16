@@ -39,6 +39,7 @@ const readAll = async (req, res) => {
 
 const filter = (req, _res, next) => {
   req.q = {
+    ...req.q,
     where: {
       id: req.params.id,
     },
@@ -80,7 +81,7 @@ const destroy = async (req, res) => {
   }
 };
 
-exports.create = [create, filter, readOne];
+exports.create = [create, query, filter, readOne];
 exports.readAll = [query, readAll];
 exports.readOne = [query, filter, readOne];
 exports.update = [query, filter, update, readOne];
