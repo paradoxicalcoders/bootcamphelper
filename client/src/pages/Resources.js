@@ -19,21 +19,7 @@ import TitleIcon from '@material-ui/icons/Title';
 import ContentWrapper from 'components/ContentWrapper';
 import Snackbar from 'components/Snackbar';
 
-const suggestions = [
-  { label: 'JavaScript' },
-  { label: 'SQL' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
-
 const customSelectStyles = {
-  singleValue: (provided, state) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
-
-    return { ...provided, opacity, transition };
-  },
   control: provided => ({
     ...provided,
     paddingTop: 10,
@@ -47,17 +33,64 @@ class Resources extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      resource: [],
       title: '',
       url: '',
+      tags: [],
+      selectedTags: [],
       tabValue: 2,
+      urlError: '',
       snackbarVariant: 'warning',
       snackbarMessage: '',
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleTagsChange = this.handleTagsChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.validUrl = this.validUrl.bind(this);
     this.closeSnackbar = this.closeSnackbar.bind(this);
+  }
+
+  componentDidMount() {
+    this.getTags();
+    this.getResources();
+  }
+
+  async getTags() {
+    try {
+      const response = await axios.get('/api/v1/tags');
+      const tags = response.data && response.data.map(tag => (
+        {
+          label: tag.name,
+          value: tag.id,
+        }
+      ));
+
+      this.setState({
+        tags,
+      });
+    } catch (err) {
+      this.setState({
+        snackbarMessage: err.toString(),
+        snackbarVariant: 'error',
+      });
+    }
+  }
+
+  async getResources() {
+    try {
+      const response = await axios.get('/api/v1/resources');
+      console.log('resources', response);
+      this.setState({
+        resources: response.data.resources,
+      });
+    } catch (err) {
+      this.setState({
+        snackbarMessage: err.toString(),
+        snackbarVariant: 'error',
+      });
+    }
   }
 
   render() {
@@ -94,10 +127,24 @@ class Resources extends Component {
 
   renderTabContent() {
     if (this.state.tabValue === 0) {
-      return <h2>Favorites</h2>;
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+        >
+          <h2>Favorites</h2>
+        </Box>
+      );
     }
     if (this.state.tabValue === 1) {
-      return <h2>My List</h2>;
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+        >
+          <h2>Resources</h2>
+        </Box>
+      );
     }
     return (
       <Box
@@ -139,6 +186,8 @@ class Resources extends Component {
               label="URL"
               fullWidth
               name="url"
+              helperText={this.state.urlError}
+              error={!!this.state.urlError}
               value={this.state.url}
               onChange={this.handleInputChange}
               InputProps={{
@@ -153,10 +202,10 @@ class Resources extends Component {
           <Box my={2}>
             <Select
               id="tags"
-              options={suggestions}
+              options={this.state.tags}
               placeholder="Tags"
-              // value={multi}
-              // onChange={handleChangeMulti}
+              value={this.state.selectedTags}
+              onChange={this.handleTagsChange}
               isMulti
               styles={customSelectStyles}
               theme={theme => ({
@@ -173,7 +222,7 @@ class Resources extends Component {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={this.state.isLoading || !this.state.title || !this.state.url}
+              disabled={this.saveButtonEnabled()}
             >
               Save Resource
             </Button>
@@ -183,47 +232,62 @@ class Resources extends Component {
     );
   }
 
+  saveButtonEnabled() {
+    const { title, url, selectedTags } = this.state;
+    return !title || !url || !selectedTags.length > 0;
+  }
+
   handleTabChange(event, newValue) {
     this.setState({
       tabValue: newValue,
     });
   }
 
+  handleTagsChange(selectedTags) {
+    this.setState({
+      selectedTags,
+    });
+  }
+
   handleInputChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    this.setState({ [name]: value }, () => {
+      if (name === 'url') this.validUrl();
+    });
+  }
+
+  validUrl() {
+    if (!isUrl(this.state.url)) {
+      this.setState({
+        urlError: 'Not a valid URL',
+      });
+      return false;
+    }
+    this.setState({
+      urlError: '',
+    });
+    return true;
   }
 
   async handleSubmit(event) {
     event.preventDefault();
 
-    if (!isUrl(this.state.url)) {
-      this.setState({
-        snackbarMessage: 'Invalid URL',
-        snackbarVariant: 'error',
-      });
-      return;
-    }
+    if (!this.validUrl()) return;
 
     this.setState({
       isLoading: true,
     });
 
     try {
+      const tags = this.state.selectedTags.map(tag => tag.value);
       const response = await axios.post('/api/v1/resources', {
         url: this.state.url,
         title: this.state.title,
+        tags,
       });
 
       if (response.data) {
-        const { tags } = this.state;
-        tags.push(response.data);
-        this.setState({
-          isLoading: false,
-          tags,
-          snackbarMessage: 'Tag added!',
-          snackbarVariant: 'success',
-          newTagName: '',
-        });
+        console.log(response.data);
       }
     } catch (err) {
       this.setState({
