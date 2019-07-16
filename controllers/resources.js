@@ -38,8 +38,10 @@ const readAll = async (req, res) => {
 };
 
 const filter = (req, _res, next) => {
-  req.q.where = {
-    id: req.params.id,
+  req.q = {
+    where: {
+      id: req.params.id,
+    },
   };
 
   next();
