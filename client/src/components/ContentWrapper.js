@@ -18,7 +18,7 @@ class ContentWrapper extends Component {
 }
 
 ContentWrapper.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.array,
 };
 
 export default ContentWrapper;

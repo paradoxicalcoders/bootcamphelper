@@ -44,7 +44,7 @@ const SimpleDialog = ({
 
 SimpleDialog.propTypes = {
   onClose: PropTypes.func,
-  question: PropTypes.string.isRequired,
+  question: PropTypes.string,
   selectedValue: PropTypes.string,
 };
 

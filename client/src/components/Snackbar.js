@@ -98,13 +98,16 @@ Snackbar.defaultProps = {
 };
 
 BootcampSnackbar.propTypes = {
-  // anchorOrigin: PropTypes.object.isRequired,
+  anchorOrigin: PropTypes.object,
   open: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
-  // className: PropTypes.string.isRequired,
-  // classes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  className: PropTypes.string,
+  classes: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.object,
+  ]),
   other: PropTypes.array,
 };
 
