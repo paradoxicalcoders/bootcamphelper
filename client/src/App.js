@@ -114,7 +114,10 @@ class App extends Component {
               />
               <Route
                 exact path='/resources'
-                render={props => <Resources {...props} />}
+                render={props => <Resources
+                  {...props}
+                  userId={this.state.userAccount.id}
+                />}
               />
               <Route
                 exact path='/tag-manager'

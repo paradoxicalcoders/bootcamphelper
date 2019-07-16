@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -83,7 +84,7 @@ class Resources extends Component {
       const response = await axios.get('/api/v1/resources');
       console.log('resources', response);
       this.setState({
-        resources: response.data.resources,
+        resources: response.data,
       });
     } catch (err) {
       this.setState({
@@ -137,12 +138,18 @@ class Resources extends Component {
       );
     }
     if (this.state.tabValue === 1) {
+      console.log(this.state.resources);
       return (
         <Box
           display="flex"
           justifyContent="center"
         >
-          <h2>Resources</h2>
+          <Box>
+            <h2>Resources</h2>            
+            {this.state.resources.map(resource => (
+              <Box key={resource.id}><a href={resource.url}>{resource.title}</a></Box>
+            ))}
+          </Box>
         </Box>
       );
     }
@@ -284,10 +291,21 @@ class Resources extends Component {
         url: this.state.url,
         title: this.state.title,
         tags,
+        UserId: this.props.userId,
       });
 
       if (response.data) {
-        console.log(response.data);
+        this.setState({
+          isLoading: false,
+          snackbarMessage: 'Resource added!',
+          snackbarVariant: 'success',
+          url: '',
+          title: '',
+          selectedTags: [],
+          tabValue: 1,
+        });
+      } else {
+        throw new Error('An unexpected error occurred.');
       }
     } catch (err) {
       this.setState({
@@ -304,5 +322,9 @@ class Resources extends Component {
     });
   }
 }
+
+Resources.propTypes = {
+  userId: PropTypes.number.isRequired,
+};
 
 export default Resources;

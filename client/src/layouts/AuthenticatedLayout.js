@@ -109,7 +109,7 @@ AuthenticatedLayout.propTypes = {
   socket: PropTypes.object.isRequired,
   authenticated: PropTypes.bool.isRequired,
   onSignOut: PropTypes.func.isRequired,
-  userAccount: PropTypes.object.isRequired,
+  userAccount: PropTypes.object,
   children: PropTypes.object,
 };
 
