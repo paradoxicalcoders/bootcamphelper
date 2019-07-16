@@ -9,8 +9,7 @@ import Dashboard from 'pages/Dashboard';
 import Resources from 'pages/Resources';
 import TagManager from 'pages/TagManager';
 
-const socketUrl = process.env.NODE_ENV === 'production' ? "http://kubootcamphelper.herokuapp.com" : "http://localhost:3001";
-// const socket = require('socket.io-client')(socketUrl);
+const socketUrl = process.env.NODE_ENV === 'production' ? 'http://kubootcamphelper.herokuapp.com' : 'http://localhost:3001';
 const socket = io(socketUrl);
 
 class App extends Component {
@@ -25,6 +24,7 @@ class App extends Component {
 
     this.onSignIn = this.onSignIn.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
+    this.emitUser = this.emitUser.bind(this);
   }
 
   componentWillMount() {
@@ -32,21 +32,23 @@ class App extends Component {
     this.checkSession();
   }
 
-  initSocket = () => {
+  initSocket() {
     // const socket = io(socketUrl)
-    this.setState({ socket })
+    this.setState({ socket });
   }
 
   checkSession() {
     // If a page is refreshed and state is cleared, check session storage for a user.
     if (this.authenticated) {
-      return this.setState({
+      this.setState({
         sessionChecked: true,
       });
+      this.emitUser(this.state.userAccount);
+      return;
     }
 
     const userAccount = JSON.parse(window.sessionStorage.getItem('userAccount'));
-    const authenticated = userAccount && userAccount.email ? true : false;
+    const authenticated = !!(userAccount && userAccount.email);
     this.setState({
       authenticated,
       userAccount,
@@ -58,10 +60,8 @@ class App extends Component {
     }
   }
 
-  emitUser = (userAccount) => {
-    console.log('emit user');
-    console.log(socket);
-    socket.emit('SEND_USER_INFO', userAccount)
+  emitUser(userAccount) {
+    socket.emit('SEND_USER_INFO', userAccount);
   }
 
   onSignIn(userAccount) {
@@ -73,7 +73,7 @@ class App extends Component {
     });
     this.emitUser(userAccount);
   }
-  
+
   onSignOut() {
     window.sessionStorage.clear();
     this.setState({
@@ -81,24 +81,21 @@ class App extends Component {
       userAccount: {},
     });
   }
-  
+
   render() {
     if (!this.state.sessionChecked) return null;
-
-    const { socket } = this.state;
 
     return (
       <Router>
         <Switch>
           <Route
             exact path='/'
-            render={(props) =>
-              <LoginPage
-                {...props}
-                userAccount={this.state.userAccount}
-                authenticated={this.state.authenticated}
-                onSignIn={this.onSignIn}
-              />}
+            render={props => <LoginPage
+              {...props}
+              userAccount={this.state.userAccount}
+              authenticated={this.state.authenticated}
+              onSignIn={this.onSignIn}
+            />}
           />
           <AuthenticatedLayout
             onSignOut={this.onSignOut}
@@ -109,15 +106,21 @@ class App extends Component {
             <Switch>
               <Route
                 exact path='/dashboard'
-                render={(props) => <Dashboard {...props} userAccount={this.state.userAccount} socket={socket} />}
+                render={props => <Dashboard
+                  {...props}
+                  userAccount={this.state.userAccount}
+                  socket={socket} />
+                }
               />
               <Route
                 exact path='/resources'
-                render={(props) => <Resources {...props} />}
+                render={props => <Resources {...props} />}
               />
               <Route
                 exact path='/tag-manager'
-                render={(props) => <TagManager {...props} isAdmin={!!(this.state.userAccount && this.state.userAccount.isAdmin)} />}
+                render={props => <TagManager
+                  {...props}
+                  isAdmin={!!(this.state.userAccount && this.state.userAccount.isAdmin)} />}
               />
             </Switch>
           </AuthenticatedLayout>

@@ -17,28 +17,20 @@ const fistToFive = ['FIST', '1', '2', '3', '4', '5'];
 // });
 
 const SimpleDialog = ({
-  onClose,
-  question,
-  selectedValue,
-  ...other
+  onClose, question, selectedValue, ...other
 }) => {
   function handleClose() {
     onClose(false, selectedValue);
   }
 
   function handleListItemClick(value) {
-    let newValue;
-    console.log(value);
-    if (value === 'FIST') newValue = 0;
+    const newValue = value === 'FIST' ? 0 : value;
     onClose(false, +newValue);
   }
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" {...other}>
-      <DialogTitle id="simple-dialog-title">
-        Fist to Five -
-        {question}
-      </DialogTitle>
+      <DialogTitle id="simple-dialog-title">Fist to Five - {question}</DialogTitle>
       <List>
         {fistToFive.map(count => (
           <ListItem button onClick={() => handleListItemClick(count)} key={count}>

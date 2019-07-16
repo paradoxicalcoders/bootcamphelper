@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
+import axios from 'axios';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DialogModal from 'components/DialogModal';
 
@@ -13,26 +15,31 @@ class AuthenticatedLayout extends Component {
     super(props);
     this.state = {
       modalOpen: false,
-      question: null,
+      questionObj: null,
       mobileOpen: false,
     };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.modalClose = this.modalClose.bind(this);
 
-    // this.receiveQuestion = this.receiveQuestion.bind(this);
-    this.receiveQuestion = () => {
-      const { socket } = this.props;
-      socket.on('GET_QUESTION', (question) => {
-        this.setState({ question, modalOpen: true });
-      });
-    };
     this.receiveQuestion();
   }
 
   // componentDidMount() {
   //   this.receiveQuestion();
   // }
+
+  receiveQuestion() {
+    const { socket, userAccount } = this.props;
+    if (!userAccount.isAdmin) {
+      socket.on('GET_QUESTION', (questionObj) => {
+        this.setState({ questionObj, modalOpen: true });
+        const CourseId = userAccount.courses[0].id;
+        const UserId = userAccount.id;
+        socket.emit('GOT_QUESTION', { courseID: CourseId, userID: UserId, questionObj });
+      });
+    }
+  }
 
   setMobileOpen(bool) {
     this.setState({
@@ -44,22 +51,31 @@ class AuthenticatedLayout extends Component {
     this.setMobileOpen(!this.state.mobileOpen);
   }
 
-  modalClose(bool, val) {
-    const { socket } = this.props;
-    this.setState({ modalOpen: bool });
-    socket.emit('SEND_RESPONSE', val);
+  async modalClose(bool, answer) {
+    const { socket, userAccount } = this.props;
+    const { question, QuestionId } = this.state.questionObj;
+    const { id: UserId } = userAccount;
+    try {
+      const response = await axios.post('/api/v1/responses', {
+        answer,
+        QuestionId,
+        UserId,
+      });
+      const { answer: resAnswer } = response.data;
+      this.setState({ modalOpen: bool });
+      socket.emit('SEND_RESPONSE', { resAnswer, question, UserId });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
     // this.emitUser(this.props.userAccount);
     if (!this.props.authenticated) {
-      return <Redirect to='/' />;
+      return <Redirect to="/" />;
     }
 
-    const {
-      onSignOut,
-      userAccount,
-    } = this.props;
+    const { onSignOut, userAccount } = this.props;
 
     return (
       <div style={{ display: 'flex' }}>
@@ -74,9 +90,7 @@ class AuthenticatedLayout extends Component {
           mobileOpen={this.state.mobileOpen}
           isAdmin={!!(this.props.userAccount && this.props.userAccount.isAdmin)}
         />
-        <main style={{ flexGrow: 1, backgroundColor: '#efefef' }}>
-          {this.props.children}
-        </main>
+        <main style={{ flexGrow: 1, backgroundColor: '#efefef' }}>{this.props.children}</main>
         <DialogModal
           maxWidth={'sm'}
           disableBackdropClick={true}
@@ -84,7 +98,7 @@ class AuthenticatedLayout extends Component {
           fullWidth={true}
           open={this.state.modalOpen}
           onClose={this.modalClose}
-          question={this.state.question}
+          question={this.state.questionObj ? this.state.questionObj.question : ''}
         />
       </div>
     );
