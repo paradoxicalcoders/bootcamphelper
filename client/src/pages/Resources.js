@@ -19,6 +19,7 @@ import TitleIcon from '@material-ui/icons/Title';
 
 import ContentWrapper from 'components/ContentWrapper';
 import Snackbar from 'components/Snackbar';
+import SimpleCard from 'components/SimpleCard';
 
 const customSelectStyles = {
   control: provided => ({
@@ -85,6 +86,7 @@ class Resources extends Component {
       console.log('resources', response);
       this.setState({
         resources: response.data,
+        tabValue: 1,
       });
     } catch (err) {
       this.setState({
@@ -141,15 +143,20 @@ class Resources extends Component {
       console.log(this.state.resources);
       return (
         <Box
+          px={5}
+          pt={3}
+          pb={5}
           display="flex"
-          justifyContent="center"
+          flexWrap="wrap"
         >
-          <Box>
-            <h2>Resources</h2>            
-            {this.state.resources.map(resource => (
-              <Box key={resource.id}><a href={resource.url}>{resource.title}</a></Box>
-            ))}
-          </Box>
+          {this.state.resources.map(resource => (
+            <SimpleCard
+              key={resource.id}
+              title={resource.title}
+              url={resource.url}
+              tags={resource.Tags}
+            />
+          ))}
         </Box>
       );
     }
@@ -295,14 +302,13 @@ class Resources extends Component {
       });
 
       if (response.data) {
+        this.getResources();
         this.setState({
-          isLoading: false,
           snackbarMessage: 'Resource added!',
           snackbarVariant: 'success',
           url: '',
           title: '',
           selectedTags: [],
-          tabValue: 1,
         });
       } else {
         throw new Error('An unexpected error occurred.');
